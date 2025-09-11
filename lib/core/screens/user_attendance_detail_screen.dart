@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qrscanner/core/services/attendance_service.dart';
-import 'package:qrscanner/core/services/profile_service.dart';
-import 'package:qrscanner/widgets/user_profile_card.dart';
-import 'package:qrscanner/widgets/month_year_picker.dart';
-import 'package:qrscanner/widgets/attendance_list.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 
 class UserAttendanceDetailScreen extends StatefulWidget {
   final String userId;
@@ -70,11 +69,12 @@ class _UserAttendanceDetailScreenState extends State<UserAttendanceDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text('${widget.userName} - Attendance'),
-        backgroundColor: const Color(0xFF16213E),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -86,11 +86,14 @@ class _UserAttendanceDetailScreenState extends State<UserAttendanceDetailScreen>
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: LoadingAnimationWidget.stretchedDots(
+        color: Colors.white,
+        size: 30,
+      ),)
           : _error != null
               ? _buildErrorState()
               : _buildContent(),
-    );
+      ),);
   }
 
   Widget _buildErrorState() {

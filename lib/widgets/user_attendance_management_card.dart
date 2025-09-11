@@ -5,24 +5,30 @@ import 'package:qrscanner/core/models/user_model.dart';
 import 'package:qrscanner/widgets/avatar_widget.dart';
 import 'package:qrscanner/widgets/location_map_widget.dart';
 import 'package:qrscanner/core/screens/user_attendance_detail_screen.dart';
+
 class UserAttendanceManagementCard extends StatefulWidget {
   final Map<String, dynamic> attendance;
   final Department selectedDepartment;
+
   const UserAttendanceManagementCard({
     super.key,
     required this.attendance,
     required this.selectedDepartment,
   });
+
   @override
   State<UserAttendanceManagementCard> createState() => _UserAttendanceManagementCardState();
 }
+
 class _UserAttendanceManagementCardState extends State<UserAttendanceManagementCard> {
   bool _isTeamLeader = false;
+
   @override
   void initState() {
     super.initState();
     _checkTeamLeaderStatus();
   }
+
   Future<void> _checkTeamLeaderStatus() async {
     final isTeamLeader = await AttendanceManagementUtils.isCurrentUserTeamLeader();
     if (mounted) {
@@ -31,6 +37,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final user = widget.attendance['user'] as Map<String, dynamic>;
@@ -40,16 +47,19 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
     final lng = widget.attendance['lng'] as double?;
     final hasAttendance = widget.attendance['hasAttendance'] as bool? ?? false;
 
+    // Format functions
     String formattedCheckIn = AttendanceManagementUtils.formatTime(checkIn);
     String formattedCheckOut = AttendanceManagementUtils.formatTime(checkOut);
     String duration = AttendanceManagementUtils.formatDuration(checkIn, checkOut);
 
+    // Debug: Print what data we're receiving
     print('Building card for user: ${user['firstName']}');
     print('  Raw checkIn: $checkIn');
     print('  Raw checkOut: $checkOut');
     print('  Formatted checkIn: $formattedCheckIn');
     print('  Formatted checkOut: $formattedCheckOut');
     print('  Duration: $duration');
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
@@ -61,15 +71,15 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
+          // Header Row: Avatar + Labels
           Row(
             children: [
-
+              // Avatar and Name Column (flex: 2)
               Expanded(
                 flex: 2,
                 child: Container(),
               ),
-
+              // Check In
               Expanded(
                 child: Text(
                   'Check In',
@@ -81,7 +91,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                   ),
                 ),
               ),
-
+              // Check Out
               Expanded(
                 child: Text(
                   'Check Out',
@@ -93,7 +103,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                   ),
                 ),
               ),
-
+              // Duration
               Expanded(
                 child: Text(
                   'Duration',
@@ -108,22 +118,22 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
             ],
           ),
           const SizedBox(height: 8),
-
+          // Data Row: Avatar, Name, Employee ID, Times
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
+              // Avatar and User Info (flex: 2)
               Expanded(
                 flex: 2,
                 child: GestureDetector(
                   onTap: () {
-
-                        Get.to(() => UserAttendanceDetailScreen(
-                          userId: user['id'] ?? '',
-                          userName: '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}',
-                          userDepartment: widget.selectedDepartment.name,
-                        ));
+                    Get.to(() => UserAttendanceDetailScreen(
+                      userId: user['id'] as String,
+                      userName: '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}',
+                      userDepartment: widget.selectedDepartment.name,
+                    ));
                   },
+
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -166,7 +176,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                   ),
                 ),
               ),
-
+              // Check In Time
               Expanded(
                 child: Text(
                   formattedCheckIn,
@@ -178,7 +188,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                   ),
                 ),
               ),
-
+              // Check Out Time
               Expanded(
                 child: Text(
                   formattedCheckOut,
@@ -190,7 +200,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                   ),
                 ),
               ),
-
+              // Duration
               Expanded(
                 child: Text(
                   duration,
@@ -204,7 +214,8 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
               ),
             ],
           ),
-
+          
+          // Location section - only visible to team leaders when user has attendance
           if (_isTeamLeader && hasAttendance && AttendanceManagementUtils.hasValidLocation(lat, lng))
             Container(
               margin: const EdgeInsets.only(top: 12),
@@ -226,7 +237,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Attendance Location',
+                        'Location',
                         style: TextStyle(
                           color: Colors.blueAccent,
                           fontSize: 12,
@@ -238,7 +249,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                   const SizedBox(height: 8),
                   Row(
                     children: [
-
+                      // Small map
                       if (AttendanceManagementUtils.hasValidLocation(lat, lng))
                         LocationMapWidget(
                           latitude: lat!,
@@ -247,7 +258,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                           width: 100,
                         ),
                       const SizedBox(width: 12),
-
+                      // Coordinates text
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

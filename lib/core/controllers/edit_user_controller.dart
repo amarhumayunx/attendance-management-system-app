@@ -238,6 +238,8 @@ class EditUserController extends GetxController {
 
   String getDesignationDisplayName(Designation designation) {
     switch (designation) {
+      case Designation.admin:
+        return 'Admin';
       case Designation.teamLeader:
         return 'Team Leader';
       case Designation.manager:

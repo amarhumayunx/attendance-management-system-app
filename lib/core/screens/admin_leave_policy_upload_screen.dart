@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:qrscanner/lib_exports.dart';
 import 'dart:io';
-import 'package:qrscanner/widgets/admin_upload_header_widget.dart';
-import 'package:qrscanner/widgets/config_warning_widget.dart';
-import 'package:qrscanner/widgets/file_selection_widget.dart';
-import 'package:qrscanner/widgets/upload_section_widget.dart';
-import 'package:qrscanner/widgets/upload_instructions_widget.dart';
-import 'package:qrscanner/core/services/admin_upload_service.dart';
-import 'package:qrscanner/core/services/supabase_storage_service.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class AdminLeavePolicyUploadScreen extends StatefulWidget {
   const AdminLeavePolicyUploadScreen({super.key});
   @override
@@ -19,28 +15,21 @@ class _AdminLeavePolicyUploadScreenState extends State<AdminLeavePolicyUploadScr
   String? _errorMessage;
   String? _troubleshooting;
   String? _currentPdfUrl;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Upload Leave Policy'),
-        backgroundColor: const Color(0xFF0F3460),
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        foregroundColor: Colors.white,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F3460),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+      body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -50,7 +39,7 @@ class _AdminLeavePolicyUploadScreenState extends State<AdminLeavePolicyUploadScr
               const AdminUploadHeaderWidget(),
               const SizedBox(height: 24),
 
-              const ConfigWarningWidget(),
+              //const ConfigWarningWidget(),
               if (!_isSupabaseConfigured()) const SizedBox(height: 24),
 
               FileSelectionWidget(
@@ -74,14 +63,14 @@ class _AdminLeavePolicyUploadScreenState extends State<AdminLeavePolicyUploadScr
                 const SizedBox(height: 24),
               ],
 
-              const UploadInstructionsWidget(),
-              const SizedBox(height: 100),
+              //const UploadInstructionsWidget(),
             ],
           ),
         ),
-      ),
+      ),),
     );
   }
+
   bool _isSupabaseConfigured() {
     return SupabaseStorageService.isConfigured;
   }

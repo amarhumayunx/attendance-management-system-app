@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qrscanner/core/models/document_model.dart';
-import 'package:qrscanner/core/services/profile_service.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class DocumentUploadScreen extends StatefulWidget {
   const DocumentUploadScreen({super.key});
   @override
@@ -41,13 +44,19 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
       if (mounted) setState(() { _saving = false; });
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text('Upload Document'),
-        backgroundColor: const Color(0xFF1A1A2E),
+        title: Text(
+            'Upload Document', style: TextStyle(
+          color: Colors.white,
+          fontFamily: GoogleFonts.poppins().fontFamily,
+        ),),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -225,13 +234,13 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                 ),
                 onPressed: _saving ? null : _save,
                 child: _saving
-                    ? const SizedBox(
+                    ? SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white
-                        )
+                        child: LoadingAnimationWidget.stretchedDots(
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       )
                     : const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -249,39 +258,9 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                       ),
               ),
             ),
-            const SizedBox(height: 20),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF4ECDC4).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF4ECDC4).withOpacity(0.2)),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: const Color(0xFF4ECDC4),
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Make sure your document URL is publicly accessible and contains clear, readable content.',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 13,
-                        height: 1.3,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
-      ),
+      ),),
     );
   }
 }

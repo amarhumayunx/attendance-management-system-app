@@ -83,8 +83,6 @@ class LoginController extends GetxController {
       }
 
       _resetLoginAttempts();
-
-      showSuccessMessage();
     } catch (e) {
       _incrementLoginAttempts();
       error.value = e.toString().replaceFirst('Exception: ', '');

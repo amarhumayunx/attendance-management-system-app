@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qrscanner/core/utils/attendance_month_utils.dart';
+
 class WeekendDayWidget extends StatelessWidget {
   final DateTime day;
   const WeekendDayWidget({
     super.key,
     required this.day,
   });
+
   @override
   Widget build(BuildContext context) {
     final wk = AttendanceMonthUtils.weekdayShort(day);

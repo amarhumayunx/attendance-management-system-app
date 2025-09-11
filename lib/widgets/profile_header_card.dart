@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:qrscanner/widgets/avatar_widget.dart';
 class ProfileHeaderCard extends StatelessWidget {
   final User user;
@@ -29,8 +30,8 @@ class ProfileHeaderCard extends StatelessWidget {
                 firstName: firstName,
                 lastName: lastName,
                 radius: 45,
-                backgroundColor: const Color(0xFF4ECDC4),
-                textColor: Colors.white,
+                backgroundColor: Colors.white,
+                textColor: Colors.black,
                 fontSize: 30,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
@@ -47,14 +48,14 @@ class ProfileHeaderCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 30),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       fullName.isNotEmpty ? fullName : 'User',
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -62,13 +63,13 @@ class ProfileHeaderCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 10),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                       child: Text(
                         designation.isNotEmpty ? designation : 'Employee',
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),

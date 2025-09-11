@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/core/models/leave_model.dart';
 import 'package:qrscanner/core/services/leave_service.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class LeaveScreen extends StatefulWidget {
   const LeaveScreen({super.key});
   @override
@@ -106,29 +109,23 @@ class _LeaveScreenState extends State<LeaveScreen> {
     }
   }
   @override
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
-      appBar: AppBar(
-        title: const Text('Leave Request', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF1A1A2E),
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F3460),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text(
+            'Leave Request',
+            style: TextStyle(color: Colors.white),
           ),
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.white),
+          elevation: 0,
+          centerTitle: true,
         ),
-        child: SafeArea(
+        body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Form(
@@ -136,7 +133,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-
+                  /// HEADER CARD
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -182,6 +179,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                   ),
                   const SizedBox(height: 24),
 
+                  /// REASON CARD
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -206,19 +204,26 @@ class _LeaveScreenState extends State<LeaveScreen> {
                           maxLines: 4,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            hintText: 'Please provide a reason for your leave request...',
-                            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                            hintText:
+                            'Please provide a reason for your leave request...',
+                            hintStyle:
+                            TextStyle(color: Colors.white.withOpacity(0.5)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                              borderSide: BorderSide(
+                                color: Colors.white.withOpacity(0.3),
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                              borderSide: BorderSide(
+                                color: Colors.white.withOpacity(0.3),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFF4ECDC4)),
+                              borderSide:
+                              const BorderSide(color: Color(0xFF4ECDC4)),
                             ),
                             filled: true,
                             fillColor: Colors.white.withOpacity(0.05),
@@ -238,6 +243,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                   ),
                   const SizedBox(height: 20),
 
+                  /// DURATION CARD
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -258,6 +264,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                         ),
                         const SizedBox(height: 16),
 
+                        /// START DATE
                         InkWell(
                           onTap: () => _selectDate(context, true),
                           child: Container(
@@ -265,59 +272,70 @@ class _LeaveScreenState extends State<LeaveScreen> {
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.05),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white.withOpacity(0.3)),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                              ),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.calendar_today, color: Color(0xFF4ECDC4)),
+                                const Icon(Icons.calendar_today,
+                                    color: Color(0xFF4ECDC4)),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    _startDate == null 
-                                        ? 'Select Start Date' 
+                                    _startDate == null
+                                        ? 'Select Start Date'
                                         : 'Start: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
                                     style: TextStyle(
-                                      color: _startDate == null 
+                                      color: _startDate == null
                                           ? Colors.white.withOpacity(0.5)
                                           : Colors.white,
                                       fontSize: 16,
                                     ),
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: Colors.white),
+                                const Icon(Icons.chevron_right,
+                                    color: Colors.white),
                               ],
                             ),
                           ),
                         ),
                         const SizedBox(height: 12),
 
+                        /// END DATE
                         InkWell(
-                          onTap: _startDate == null ? null : () => _selectDate(context, false),
+                          onTap: _startDate == null
+                              ? null
+                              : () => _selectDate(context, false),
                           child: Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.05),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white.withOpacity(0.3)),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                              ),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.calendar_today, color: Color(0xFF4ECDC4)),
+                                const Icon(Icons.calendar_today,
+                                    color: Color(0xFF4ECDC4)),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    _endDate == null 
-                                        ? 'Select End Date' 
+                                    _endDate == null
+                                        ? 'Select End Date'
                                         : 'End: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
                                     style: TextStyle(
-                                      color: _endDate == null 
+                                      color: _endDate == null
                                           ? Colors.white.withOpacity(0.5)
                                           : Colors.white,
                                       fontSize: 16,
                                     ),
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right, color: Colors.white),
+                                const Icon(Icons.chevron_right,
+                                    color: Colors.white),
                               ],
                             ),
                           ),
@@ -327,6 +345,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                   ),
                   const SizedBox(height: 24),
 
+                  /// SUBMIT BUTTON
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
@@ -339,22 +358,22 @@ class _LeaveScreenState extends State<LeaveScreen> {
                         elevation: 0,
                       ),
                       child: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
+                          ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: LoadingAnimationWidget.stretchedDots(
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      )
                           : const Text(
-                              'Submit Leave Request',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                        'Submit Leave Request',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ],

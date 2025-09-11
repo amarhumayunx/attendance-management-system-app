@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qrscanner/core/models/user_model.dart';
-import 'package:qrscanner/core/services/admin_user_creation_service.dart';
-import 'package:qrscanner/core/screens/admin_leave_policy_upload_screen.dart';
-import 'package:qrscanner/widgets/admin_personal_info_section.dart';
-import 'package:qrscanner/widgets/admin_employee_details_section.dart';
-import 'package:qrscanner/widgets/admin_form_field_widgets.dart';
+import 'package:qrscanner/lib_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
   @override
@@ -30,8 +27,13 @@ class _AdminScreenState extends State<AdminScreen> {
   final _salary = TextEditingController();
   final _officeStartTime = TextEditingController();
   final _officeEndTime = TextEditingController();
+
+
   bool _saving = false;
   String? _error;
+
+
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() { _saving = true; _error = null; });
@@ -72,13 +74,16 @@ class _AdminScreenState extends State<AdminScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Admin - Create User'),
-        backgroundColor: const Color(0xFF0F3460),
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {
@@ -89,54 +94,61 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
 
-              AdminPersonalInfoSection(
-                firstNameController: _firstName,
-                lastNameController: _lastName,
-                emailController: _email,
-                passwordController: _password,
-                ageController: _age,
-                dobController: _dob,
-                dojController: _doj,
-                designation: _designation,
-                onDesignationChanged: (value) => setState(() => _designation = value),
-              ),
+                AdminPersonalInfoSection(
+                  firstNameController: _firstName,
+                  lastNameController: _lastName,
+                  emailController: _email,
+                  passwordController: _password,
+                  ageController: _age,
+                  dobController: _dob,
+                  dojController: _doj,
+                  designation: _designation,
+                  onDesignationChanged: (value) =>
+                      setState(() => _designation = value),
+                ),
 
-              AdminEmployeeDetailsSection(
-                department: _department,
-                employeeType: _employeeType,
-                branchCode: _branchCode,
-                imageUrlController: _imageUrl,
-                addressController: _address,
-                phoneController: _phone,
-                salaryController: _salary,
-                officeStartTimeController: _officeStartTime,
-                officeEndTimeController: _officeEndTime,
-                onDepartmentChanged: (value) => setState(() => _department = value),
-                onEmployeeTypeChanged: (value) => setState(() => _employeeType = value),
-                onBranchCodeChanged: (value) => setState(() => _branchCode = value),
-              ),
+                AdminEmployeeDetailsSection(
+                  department: _department,
+                  employeeType: _employeeType,
+                  branchCode: _branchCode,
+                  imageUrlController: _imageUrl,
+                  addressController: _address,
+                  phoneController: _phone,
+                  salaryController: _salary,
+                  officeStartTimeController: _officeStartTime,
+                  officeEndTimeController: _officeEndTime,
+                  onDepartmentChanged: (value) =>
+                      setState(() => _department = value),
+                  onEmployeeTypeChanged: (value) =>
+                      setState(() => _employeeType = value),
+                  onBranchCodeChanged: (value) =>
+                      setState(() => _branchCode = value),
+                ),
 
-              AdminFormFieldWidgets.buildErrorText(_error),
-              const SizedBox(height: 24),
-              AdminFormFieldWidgets.buildSubmitButton(
-                onPressed: _saving ? null : _save,
-                isLoading: _saving,
-                text: 'Create User',
-              ),
-            ],
+                AdminFormFieldWidgets.buildErrorText(_error),
+                const SizedBox(height: 24),
+                AdminFormFieldWidgets.buildSubmitButton(
+                  onPressed: _saving ? null : _save,
+                  isLoading: _saving,
+                  text: 'Create User',
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ),),
     );
   }
+
   @override
   void dispose() {
     _firstName.dispose();

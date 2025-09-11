@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:qrscanner/core/services/pdf_service.dart';
-import 'package:qrscanner/widgets/pdf_viewer_widget.dart';
-import 'package:qrscanner/widgets/pdf_fallback_viewer.dart';
-import 'package:qrscanner/widgets/pdf_error_view.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class LeavePolicyViewerScreen extends StatefulWidget {
   const LeavePolicyViewerScreen({super.key});
   @override
@@ -48,11 +48,12 @@ class _LeavePolicyViewerScreenState extends State<LeavePolicyViewerScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Leave Policy'),
-        backgroundColor: const Color(0xFF0F3460),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -78,17 +79,6 @@ class _LeavePolicyViewerScreenState extends State<LeavePolicyViewerScreen> {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F3460),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
         child: isReady
             ? (useFallbackViewer 
                 ? const PdfFallbackViewer() 
@@ -123,12 +113,13 @@ class _LeavePolicyViewerScreenState extends State<LeavePolicyViewerScreen> {
                       _loadPDF();
                     },
                   )
-                : const Center(
-                    child: CircularProgressIndicator(
+                : Center(
+                    child: LoadingAnimationWidget.stretchedDots(
                       color: Colors.white,
+                      size: 30,
                     ),
                   ),
-      ),
+      ),),
     );
   }
 }

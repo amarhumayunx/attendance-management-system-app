@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 class LocationInfoWidget extends StatelessWidget {
   final Position? currentPosition;
   final bool locationLoading;
@@ -13,7 +15,7 @@ class LocationInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
+      height: 110,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
@@ -32,10 +34,11 @@ class LocationInfoWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             'Current Location',
             style: TextStyle(
               color: Colors.white,
+              fontFamily: GoogleFonts.poppins().fontFamily,
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
@@ -58,15 +61,13 @@ class LocationInfoWidget extends StatelessWidget {
         SizedBox(
           width: 16,
           height: 16,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: Colors.greenAccent,
-          ),
+          child: LoadingAnimationWidget.stretchedDots(
+              color: Colors.black, size: 30),
         ),
         const SizedBox(width: 8),
         Text(
-          'Getting location...',
-          style: TextStyle(color: Colors.white70, fontSize: 12),
+          'Loading location...',
+          style: TextStyle(color: Colors.white70, fontSize: 12,fontFamily: GoogleFonts.poppins().fontFamily,),
         ),
       ],
     );
@@ -83,7 +84,8 @@ class LocationInfoWidget extends StatelessWidget {
               'Lat: ${currentPosition!.latitude.toStringAsFixed(6)}',
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'monospace',
+
+                fontFamily: GoogleFonts.poppins().fontFamily,
                 fontSize: 11,
               ),
             ),
@@ -99,7 +101,7 @@ class LocationInfoWidget extends StatelessWidget {
               'Lng: ${currentPosition!.longitude.toStringAsFixed(6)}',
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'monospace',
+                fontFamily: GoogleFonts.poppins().fontFamily,
                 fontSize: 11,
               ),
             ),
@@ -110,6 +112,7 @@ class LocationInfoWidget extends StatelessWidget {
           'Accuracy: ±${currentPosition!.accuracy.toStringAsFixed(1)}m',
           style: TextStyle(
             color: Colors.white70,
+            fontFamily: GoogleFonts.poppins().fontFamily,
             fontSize: 11,
           ),
         ),
@@ -124,7 +127,7 @@ class LocationInfoWidget extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           'Location unavailable',
-          style: TextStyle(color: Colors.redAccent, fontSize: 12),
+          style: TextStyle(color: Colors.redAccent, fontSize: 12,fontFamily: GoogleFonts.poppins().fontFamily,),
         ),
       ],
     );

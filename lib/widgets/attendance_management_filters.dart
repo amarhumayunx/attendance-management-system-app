@@ -22,7 +22,7 @@ class AttendanceManagementFilters extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
       decoration: BoxDecoration(
-        color: Color(0xFF1A1A2E),
+        color: Colors.transparent,
       ),
       child: Column(
         children: [

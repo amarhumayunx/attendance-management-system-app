@@ -41,11 +41,11 @@ class AttendanceHomeService {
   }
 
   static String getSwipeLabel(Map<String, dynamic>? todayData) {
-    if (todayData == null) return 'Swipe to Check In';
+    if (todayData == null) return 'Tap to Check In';
     if (todayData['checkOutTime'] != null) return 'Attendance Completed';
     final ci = todayData['checkInTime'];
-    if (ci != null && ci != 'Not checked in') return 'Swipe to Check Out';
-    return 'Swipe to Check In';
+    if (ci != null && ci != 'Not checked in') return 'Tap to Check Out';
+    return 'Tap to Check In';
   }
 
   static String getTodayStatus(Map<String, dynamic>? todayData) {

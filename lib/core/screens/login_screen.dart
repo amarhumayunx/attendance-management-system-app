@@ -1,19 +1,21 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/core/controllers/login_controller.dart';
+import 'package:qrscanner/res/assets_res.dart';
+import 'package:qrscanner/widgets/abstract_background_wrapper.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(LoginController());
     return Scaffold(
-      body: Stack(
-        children: [
-
-          _buildAbstractBackground(context),
-
-          SafeArea(
+      body: AbstractBackgroundWrapper(
+        child: SafeArea(
             child: GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: Column(
@@ -40,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Image.asset(
-                                      'assets/image/icons/image.png',
+                                      AssetsRes.IMAGE,
                                       width: 200,
                                       height: 200,
                                       fit: BoxFit.contain,
@@ -54,10 +56,11 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(height: MediaQuery.of(context).size.height * 0.08),
 
                         Center(
-                          child: const Text(
+                          child: Text(
                             'Welcome',
                             style: TextStyle(
                               fontSize: 48,
+                              fontFamily: GoogleFonts.poppins().fontFamily,
                               fontWeight: FontWeight.w300,
                               color: Colors.white,
                               height: 1.1,
@@ -67,10 +70,12 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                         Center(
-                          child: const Text(
-                            'Sign in to Your Zee-palm Attendance App',
+                          child: Text(
+                            'Sign in to Zee-palm Attendance App',
+
                             style: TextStyle(
                               fontSize: 18,
+                              fontFamily: GoogleFonts.poppins().fontFamily,
                               fontWeight: FontWeight.w300,
                               color: Colors.white,
                               height: 1.1,
@@ -95,7 +100,8 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 child: TextFormField(
                                   controller: controller.emailController,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontFamily: GoogleFonts.poppins().fontFamily,
                                     color: Colors.white,
                                     fontSize: 16,
                                   ),
@@ -106,6 +112,7 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                     hintText: 'Email',
                                     hintStyle: TextStyle(
+                                      fontFamily: GoogleFonts.poppins().fontFamily,
                                       color: Colors.white.withOpacity(0.7),
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
@@ -137,7 +144,8 @@ class LoginScreen extends StatelessWidget {
                                 child: Obx(() => TextFormField(
                                   controller: controller.passwordController,
                                   obscureText: !controller.isPasswordVisible.value,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontFamily: GoogleFonts.poppins().fontFamily,
                                     color: Colors.white,
                                     fontSize: 16,
                                   ),
@@ -150,6 +158,7 @@ class LoginScreen extends StatelessWidget {
                                     hintStyle: TextStyle(
                                       color: Colors.white.withOpacity(0.7),
                                       fontSize: 16,
+                                      fontFamily: GoogleFonts.poppins().fontFamily,
                                       fontWeight: FontWeight.w400,
                                     ),
                                     suffixIcon: IconButton(
@@ -200,6 +209,7 @@ class LoginScreen extends StatelessWidget {
                                       child: Text(
                                         controller.error.value!,
                                         style: TextStyle(
+                                          fontFamily: GoogleFonts.poppins().fontFamily,
                                           color: Colors.red.shade200,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -234,6 +244,7 @@ class LoginScreen extends StatelessWidget {
                                       child: Text(
                                         'Failed attempts: ${controller.loginAttempts.value}/${LoginController.maxLoginAttempts}',
                                         style: TextStyle(
+                                          fontFamily: GoogleFonts.poppins().fontFamily,
                                           color: Colors.orange.shade200,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -266,18 +277,19 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                   onPressed: controller.canLogin ? controller.login : null,
                                   child: controller.isLoading.value
-                                      ? const SizedBox(
+                                      ? SizedBox(
                                     height: 24,
                                     width: 24,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.5,
-                                      color: Color(0xFF2D3748),
+                                    child: LoadingAnimationWidget.inkDrop(
+                                      color: Colors.white,
+                                      size: 24
                                     ),
                                   )
                                       : Text(
                                     controller.loginButtonText,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16,
+                                      fontFamily: GoogleFonts.poppins().fontFamily,
                                       fontWeight: FontWeight.w400,
                                       letterSpacing: 0.5,
                                     ),
@@ -299,6 +311,7 @@ class LoginScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
+                      fontFamily: GoogleFonts.poppins().fontFamily,
                       color: Colors.white.withOpacity(0.6),
                       fontWeight: FontWeight.w300,
                     ),
@@ -306,137 +319,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            ),
           ),
-        ],
-      ),
-    );
-  }
-  Widget _buildAbstractBackground(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      height: size.height,
-      color: const Color(0xFF1A202C),
-      child: Stack(
-        children: [
-
-          Positioned(
-            top: -size.height * 0.1,
-            left: -size.width * 0.2,
-            child: Container(
-              width: size.width * 0.8,
-              height: size.height * 0.5,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFFB794F6).withOpacity(0.8),
-                    const Color(0xFFB794F6).withOpacity(0.4),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.7, 1.0],
-                ),
-                borderRadius: BorderRadius.circular(size.width),
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: size.height * 0.2,
-            left: -size.width * 0.3,
-            child: Container(
-              width: size.width * 0.7,
-              height: size.height * 0.4,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFF4FD1C7).withOpacity(0.7),
-                    const Color(0xFF4FD1C7).withOpacity(0.3),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.6, 1.0],
-                ),
-                borderRadius: BorderRadius.circular(size.width),
-              ),
-            ),
-          ),
-
-          Positioned(
-            bottom: -size.height * 0.15,
-            right: -size.width * 0.25,
-            child: Container(
-              width: size.width * 0.9,
-              height: size.height * 0.6,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFFFBD38D).withOpacity(0.6),
-                    const Color(0xFFFBD38D).withOpacity(0.3),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
-                ),
-                borderRadius: BorderRadius.circular(size.width),
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: size.height * 0.4,
-            right: -size.width * 0.1,
-            child: Container(
-              width: size.width * 0.6,
-              height: size.height * 0.3,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFF2D3748).withOpacity(0.8),
-                    const Color(0xFF2D3748).withOpacity(0.4),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.6, 1.0],
-                ),
-                borderRadius: BorderRadius.circular(size.width),
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: size.height * 0.1,
-            right: size.width * 0.1,
-            child: Container(
-              width: size.width * 0.3,
-              height: size.width * 0.3,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFFED8936).withOpacity(0.5),
-                    const Color(0xFFED8936).withOpacity(0.2),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.7, 1.0],
-                ),
-                borderRadius: BorderRadius.circular(size.width),
-              ),
-            ),
-          ),
-
-          Container(
-            width: size.width,
-            height: size.height,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black.withOpacity(0.1),
-                  Colors.black.withOpacity(0.3),
-                ],
-                stops: const [0.0, 1.0],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

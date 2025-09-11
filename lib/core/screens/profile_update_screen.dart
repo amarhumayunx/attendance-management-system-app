@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qrscanner/core/services/profile_service.dart';
+import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/core/core_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class ProfileUpdateScreen extends StatefulWidget {
   const ProfileUpdateScreen({super.key});
   @override
@@ -67,169 +71,234 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
       if (mounted) setState(() { _saving = false; });
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
-      appBar: AppBar(
-        title: const Text('Update Profile'),
-        backgroundColor: const Color(0xFF0F3460),
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-
-                    FutureBuilder<Map<String, dynamic>?>(
-                      future: ProfileService.getProfile(FirebaseAuth.instance.currentUser!),
-                      builder: (context, snap) {
-                        final data = snap.data;
-                        if (data == null) return const SizedBox.shrink();
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withOpacity(0.1)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Admin Info',
-                                  style: TextStyle(
-                                    color: Colors.white, 
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                _ReadOnlyRow(label: 'Email', value: (data['email'] ?? '').toString(), dark: true),
-                                const SizedBox(height: 8),
-                                _ReadOnlyRow(label: 'Designation', value: (data['designation'] ?? '').toString(), dark: true),
-                                const SizedBox(height: 8),
-                                _ReadOnlyRow(label: 'Date of Joining', value: (data['dateOfJoining'] ?? '').toString(), dark: true),
-                                const SizedBox(height: 8),
-                                _ReadOnlyRow(label: 'Salary', value: (data['salary']?.toString() ?? ''), dark: true), 
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 32),
-
-                    const Text(
-                      'Personal Information',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // 👈 transparent scaffold
+        appBar: AppBar(
+          title: const Text(
+            'Update Profile',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.transparent, // 👈 transparent appbar
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+        ),
+        body: _loading
+            ? Center(
+          child: LoadingAnimationWidget.stretchedDots(
+          color: Colors.white,
+          size: 30,
+        ),)
+            : SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                FutureBuilder<Map<String, dynamic>?>(
+                  future: ProfileService.getProfile(
+                      FirebaseAuth.instance.currentUser!),
+                  builder: (context, snap) {
+                    final data = snap.data;
+                    if (data == null) return const SizedBox.shrink();
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                            color: Colors.white.withOpacity(0.1)),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _darkTextField(
-                            controller: _firstName, 
-                            label: 'First Name', 
-                            validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null
-                          )
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _darkTextField(
-                            controller: _lastName, 
-                            label: 'Last Name', 
-                            validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null
-                          )
-                        ),
-                      ]
-                    ),
-                    const SizedBox(height: 20),
-
-                    Row(
-                      children: [
-                        Expanded(child: _darkTextField(controller: _dob, label: 'DOB (YYYY-MM-DD)')),
-                        const SizedBox(width: 16),
-                        Expanded(child: _darkTextField(controller: _age, label: 'Age')),
-                      ]
-                    ),
-                    const SizedBox(height: 20),
-
-                    _darkTextField(controller: _address, label: 'Address'),
-                    const SizedBox(height: 20),
-
-                    _darkTextField(controller: _phone, label: 'Phone'),
-                    const SizedBox(height: 20),
-
-                    _darkTextField(controller: _imageUrl, label: 'Image URL'),
-                    const SizedBox(height: 32),
-
-                    if (_error != null) ...[
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                        ),
-                        child: Text(
-                          _error!, 
-                          style: const TextStyle(color: Colors.redAccent)
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-
-                    SizedBox(
-                      height: 52,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4ECDC4),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)
-                          ),
-                          elevation: 2,
-                        ),
-                        onPressed: _saving ? null : _save,
-                        child: _saving
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white
-                                )
-                              )
-                            : const Text(
-                                'Save Changes',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Admin Info',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
+                            ),
+                            const SizedBox(height: 16),
+                            _ReadOnlyRow(
+                                label: 'Email',
+                                value: (data['email'] ?? '').toString(),
+                                dark: true),
+                            const SizedBox(height: 8),
+                            _ReadOnlyRow(
+                                label: 'Designation',
+                                value:
+                                (data['designation'] ?? '').toString(),
+                                dark: true),
+                            const SizedBox(height: 8),
+                            _ReadOnlyRow(
+                                label: 'Date of Joining',
+                                value: (data['dateOfJoining'] ?? '')
+                                    .toString(),
+                                dark: true),
+                            const SizedBox(height: 8),
+                            _ReadOnlyRow(
+                                label: 'Salary',
+                                value: (data['salary']?.toString() ?? ''),
+                                dark: true),
+                          ],
+                        ),
                       ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 32),
+
+                const Text(
+                  'Personal Information',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _darkTextField(
+                          controller: _firstName,
+                          label: 'First Name',
+                          validator: (v) =>
+                          v == null || v.trim().isEmpty
+                              ? 'Required'
+                              : null),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _darkTextField(
+                          controller: _lastName,
+                          label: 'Last Name',
+                          validator: (v) =>
+                          v == null || v.trim().isEmpty
+                              ? 'Required'
+                              : null),
+                    ),
                   ],
                 ),
-              ),
+                const SizedBox(height: 20),
+
+                Row(
+                  children: [
+                    Expanded(
+                        child: _darkTextField(
+                            controller: _dob,
+                            label: 'DOB (YYYY-MM-DD)')),
+                    const SizedBox(width: 16),
+                    Expanded(
+                        child:
+                        _darkTextField(controller: _age, label: 'Age')),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                _darkTextField(controller: _address, label: 'Address'),
+                const SizedBox(height: 20),
+
+                _darkTextField(controller: _phone, label: 'Phone'),
+                const SizedBox(height: 20),
+
+                _darkTextField(controller: _imageUrl, label: 'Image URL'),
+                const SizedBox(height: 32),
+
+                if (_error != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          color: Colors.redAccent.withOpacity(0.3)),
+                    ),
+                    child: Text(_error!,
+                        style:
+                        const TextStyle(color: Colors.redAccent)),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+
+                /// --- Save Button ---
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4ECDC4),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 2,
+                    ),
+                    onPressed: _saving ? null : _save,
+                    child: _saving
+                        ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: Colors.white),
+                    )
+                        : const Text(
+                      'Save Changes',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4ECDC4),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 2,
+                    ),
+                    onPressed: () => Get.to(() => DocumentUploadScreen()),
+                    child: _saving
+                        ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: LoadingAnimationWidget.stretchedDots(
+                        color: Colors.white,
+                        size: 200,
+                        ),
+                    )
+                        : const Text(
+                      'Upload Documents',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 }
+
 class _ReadOnlyRow extends StatelessWidget {
   final String label;
   final String value;

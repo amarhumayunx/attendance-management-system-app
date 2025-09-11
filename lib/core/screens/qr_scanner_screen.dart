@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../widgets/location_info_widget.dart';
 import '../../widgets/qr_scanner_overlay.dart';
-import '../../widgets/scanner_instructions_widget.dart';
 import '../services/location_service.dart';
 import '../services/qr_scanner_controller_service.dart';
-import 'attendance_viewer.dart';
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
   @override
@@ -47,61 +44,54 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("QR Scanner"),
-        backgroundColor: const Color(0xFF0F3460),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.event_note, color: Colors.white70),
-            onPressed: () => Get.to(() => const AttendanceViewer()),
-            tooltip: 'View Attendance',
-          ),
-        ],
       ),
-      body: Stack(
-        children: [
-
-          MobileScanner(
-            controller: QRScannerControllerService.controller,
-            fit: BoxFit.cover,
-            onDetect: (BarcodeCapture capture) async {
-              await QRScannerControllerService.handleBarcodeDetection(context, capture);
-            },
-          ),
-
-          const QRScannerOverlay(),
-
-          const ScannerInstructionsWidget(),
-        ],
-      ),
-
-      bottomNavigationBar: LocationInfoWidget(
-        currentPosition: _currentPosition,
-        locationLoading: _locationLoading,
-        onRefresh: _getCurrentLocation,
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        heroTag: "refresh_location",
-        backgroundColor: Colors.white.withOpacity(0.15),
-        foregroundColor: Colors.greenAccent,
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.greenAccent.withOpacity(0.4), width: 1.5),
+      body: SafeArea(
+        top: true,
+        child: Stack(
+          children: [
+            MobileScanner(
+              controller: QRScannerControllerService.controller,
+              fit: BoxFit.cover,
+              onDetect: (BarcodeCapture capture) async {
+                await QRScannerControllerService.handleBarcodeDetection(context, capture);
+              },
+            ),
+            const QRScannerOverlay(),
+          ],
         ),
-        onPressed: _getCurrentLocation,
-        tooltip: 'Refresh Location',
-        child: const Icon(Icons.refresh),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: LocationInfoWidget(
+          currentPosition: _currentPosition,
+          locationLoading: _locationLoading,
+          onRefresh: _getCurrentLocation,
+        ),
+      ),
+      floatingActionButton: SafeArea(
+        child: FloatingActionButton(
+          heroTag: "refresh_location",
+          backgroundColor: Colors.white.withOpacity(0.15),
+          foregroundColor: Colors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.grey, width: 1.5),
+          ),
+          onPressed: _getCurrentLocation,
+          tooltip: 'Refresh Location',
+          child: const Icon(Icons.refresh),
+        ),
       ),
     );
   }
+
   @override
   void dispose() {
-    QRScannerControllerService.dispose();
     super.dispose();
   }
 }

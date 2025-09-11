@@ -4,6 +4,8 @@ class AdminFormUtils {
 
   static String getDesignationName(Designation d) {
     switch (d) {
+      case Designation.admin:
+        return 'Admin';
       case Designation.teamLeader:
         return 'Team Leader';
       case Designation.manager:

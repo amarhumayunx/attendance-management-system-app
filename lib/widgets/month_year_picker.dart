@@ -41,7 +41,7 @@ class MonthYearPicker extends StatelessWidget {
       builder: (ctx) {
         return Container(
           height: 300,
-          color: Colors.black,
+          color: Colors.white,
           child: Column(
             children: [
               SizedBox(

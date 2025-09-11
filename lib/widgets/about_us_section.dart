@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../core/controllers/about_us_controller.dart';
+
 class AboutUsSection extends StatelessWidget {
   const AboutUsSection({super.key});
   @override

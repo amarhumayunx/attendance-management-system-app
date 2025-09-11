@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 enum Designation {
+  admin,
   teamLeader,
   manager,
   employee,
@@ -121,7 +122,7 @@ class AppUser {
 Designation _designationFromString(String? value) {
   switch (value) {
     case 'admin':
-      return Designation.employee;
+      return Designation.admin;
     case 'teamLeader':
       return Designation.teamLeader;
     case 'manager':

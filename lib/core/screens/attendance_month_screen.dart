@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:qrscanner/core/services/attendance_month_service.dart';
-import 'package:qrscanner/widgets/month_selector_widget.dart';
-import 'package:qrscanner/widgets/attendance_month_day_item.dart';
-import 'package:qrscanner/widgets/weekend_day_widget.dart';
-import 'package:qrscanner/widgets/attendance_empty_state_widget.dart';
-import 'package:qrscanner/core/utils/attendance_month_utils.dart';
+import 'package:flutter/services.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+import 'package:qrscanner/widgets/attendance_month_day_blur_item.dart';
+import 'package:qrscanner/widgets/weekend_day_widget_blur.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
+
 class AttendanceMonthScreen extends StatefulWidget {
   const AttendanceMonthScreen({super.key});
   @override
@@ -51,49 +53,62 @@ class _AttendanceMonthScreenState extends State<AttendanceMonthScreen> {
   @override
   Widget build(BuildContext context) {
     final hasAttendance = AttendanceMonthUtils.hasAttendanceInMonth(_currentMonth, _history);
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: _loading
-              ? const Center(child: CircularProgressIndicator())
-              : _error != null
-                  ? Center(child: Text('Error: $_error', style: const TextStyle(color: Colors.white)))
-                  : Column(
-                      children: [
-                        MonthSelectorWidget(
-                          currentMonth: _currentMonth,
-                          onMonthChanged: _onMonthChanged,
-                          onPreviousMonth: () => _changeMonth(-1),
-                          onNextMonth: () => _changeMonth(1),
-                          onRefresh: _load,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+              value: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.light,
+              ),
+        child:Scaffold(
+          body: AbstractBackgroundWrapper(
+            child: SafeArea(
+              top: true,
+              bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: _loading
+                  ? Center(child: LoadingAnimationWidget.stretchedDots(
+                  color: Colors.white,
+                  size: 30
+              ))
+                  : _error != null
+                      ? Center(child: Text('Error: $_error', style: const TextStyle(color: Colors.white)))
+                      : Column(
+                          children: [
+                            MonthSelectorWidget(
+                              currentMonth: _currentMonth,
+                              onMonthChanged: _onMonthChanged,
+                              onPreviousMonth: () => _changeMonth(-1),
+                              onNextMonth: () => _changeMonth(1),
+                              onRefresh: _load,
+                            ),
+                            const SizedBox(height: 8),
+                            Expanded(
+                              child: hasAttendance
+                                  ? ListView.builder(
+                                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                                      itemCount: AttendanceMonthUtils.daysInMonth(_currentMonth).length,
+                                      itemBuilder: (context, index) {
+                                        final day = AttendanceMonthUtils.daysInMonth(_currentMonth)[index];
+                                        final key = AttendanceMonthUtils.dateKey(day);
+                                        final data = _history[key] as Map<String, dynamic>?;
+                                        if (AttendanceMonthUtils.isWeekend(day)) {
+                                          return WeekendDayWidgetBlurred(day: day);
+                                        }
+                                        return AttendanceMonthDayItemBlurred(
+                                          day: day,
+                                          data: data,
+                                        );
+                                      },
+                                    )
+                                  : AttendanceEmptyStateWidget(currentMonth: _currentMonth),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        Expanded(
-                          child: hasAttendance
-                              ? ListView.builder(
-                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-                                  itemCount: AttendanceMonthUtils.daysInMonth(_currentMonth).length,
-                                  itemBuilder: (context, index) {
-                                    final day = AttendanceMonthUtils.daysInMonth(_currentMonth)[index];
-                                    final key = AttendanceMonthUtils.dateKey(day);
-                                    final data = _history[key] as Map<String, dynamic>?;
-                                    if (AttendanceMonthUtils.isWeekend(day)) {
-                                      return WeekendDayWidget(day: day);
-                                    }
-                                    return AttendanceMonthDayItem(
-                                      day: day,
-                                      data: data,
-                                    );
-                                  },
-                                )
-                              : AttendanceEmptyStateWidget(currentMonth: _currentMonth),
-                        ),
-                      ],
-                    ),
-        ),
+            ),
       ),
+          ),
+        ),
     );
   }
 }

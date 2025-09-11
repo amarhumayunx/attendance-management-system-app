@@ -1,5 +1,6 @@
 
 
+export 'abstract_background_wrapper.dart';
 export 'about_us_section.dart';
 export 'action_button_widget.dart';
 export 'admin_employee_details_section.dart';
@@ -46,10 +47,10 @@ export 'personal_info_card.dart';
 export 'profile_header_card.dart';
 export 'qr_scanner_overlay.dart';
 export 'read_only_row_widget.dart';
-export 'scanner_instructions_widget.dart';
 export 'settings_section_card.dart';
 export 'simple_text_viewer.dart';
 export 'swipe_button_widget.dart';
+export 'circular_checkin_button.dart';
 export 'today_summary_widget.dart';
 export 'upload_instructions_widget.dart';
 export 'upload_section_widget.dart';

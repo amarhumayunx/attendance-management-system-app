@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 class AvatarWidget extends StatelessWidget {
   final String? imageUrl;
   final String? firstName;
@@ -29,14 +30,15 @@ class AvatarWidget extends StatelessWidget {
     final initials = _getInitials();
     Widget avatar = CircleAvatar(
       radius: radius,
-      backgroundColor: backgroundColor ?? const Color(0xFF4ECDC4),
+      backgroundColor: backgroundColor ?? Colors.white,
       backgroundImage: hasValidImage ? NetworkImage(imageUrl!) : null,
       child: hasValidImage
           ? null
           : (fallbackIcon ?? Text(
               initials,
               style: TextStyle(
-                color: textColor ?? Colors.white,
+                fontFamily: GoogleFonts.poppins().fontFamily,
+                color: textColor ?? Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: fontSize ?? (radius * 0.6),
               ),

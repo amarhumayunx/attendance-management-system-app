@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/core/screens/login_screen.dart';
 import 'package:qrscanner/widgets/main_navigation.dart';
 class AuthWrapper extends StatelessWidget {
@@ -11,10 +13,22 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-              ),
+            body: Stack(
+              children: [
+                // Blur effect
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 50
+                      )
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         }

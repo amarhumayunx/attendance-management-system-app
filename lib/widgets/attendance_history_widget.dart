@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:qrscanner/core/utils/attendance_utils.dart';
 class AttendanceHistoryWidget extends StatelessWidget {
   final Map<String, dynamic> history;
@@ -14,7 +15,7 @@ class AttendanceHistoryWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: Colors.white.withOpacity(0.1),
-          width: 1,
+          width: 2,
         ),
       ),
       child: ClipRRect(
@@ -38,9 +39,10 @@ class AttendanceHistoryWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     header,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
+                      fontFamily: GoogleFonts.poppins().fontFamily,
                       color: Colors.white,
                     ),
                   ),
@@ -65,7 +67,8 @@ class AttendanceHistoryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.white.withOpacity(0.8),
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                        color: Colors.white,
                       ),
                     ),
                   ),

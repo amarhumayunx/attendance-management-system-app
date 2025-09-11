@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:qrscanner/core/services/attendance_home_service.dart';
+import 'package:qrscanner/core/services/location_service.dart';
 import 'package:qrscanner/core/utils/attendance_utils.dart';
 import 'package:qrscanner/core/screens/qr_scanner_screen.dart';
 class HomeController extends GetxController {
@@ -12,6 +14,8 @@ class HomeController extends GetxController {
   final RxString error = ''.obs;
   final Rx<Map<String, dynamic>> history = Rx<Map<String, dynamic>>({});
   final RxBool isRefreshing = false.obs;
+  final Rx<Position?> currentPosition = Rx<Position?>(null);
+  final RxString currentLocationName = 'Loading location...'.obs;
 
   bool get hasCheckedIn => todayData.value?['checkInTime'] != null && 
                           todayData.value?['checkInTime'] != 'Not checked in';
@@ -20,12 +24,14 @@ class HomeController extends GetxController {
   String get swipeLabel => AttendanceHomeService.getSwipeLabel(todayData.value);
   String get checkInTime => AttendanceUtils.formatTime(todayData.value?['checkInTime'] as String?);
   String get checkOutTime => AttendanceUtils.formatTime(todayData.value?['checkOutTime'] as String?);
+  String get todayDuration => AttendanceUtils.formatDuration(todayData.value ?? {});
   String get onTimePercentage => AttendanceUtils.calculateOnTimePercentage(history.value);
   String get totalAttendance => '${history.value.length} days';
   @override
   void onInit() {
     super.onInit();
     loadAttendanceData();
+    _getCurrentLocation();
   }
 
   Future<void> loadAttendanceData() async {
@@ -53,10 +59,25 @@ class HomeController extends GetxController {
       todayData.value = result['todayData'];
       history.value = result['history'] ?? {};
       error.value = result['error'] ?? '';
+      _getCurrentLocation();
     } catch (e) {
       error.value = 'Failed to refresh data: ${e.toString()}';
     } finally {
       isRefreshing.value = false;
+    }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      final position = await LocationService.getCurrentLocation();
+      currentPosition.value = position;
+      
+      // Get meaningful location name using reverse geocoding
+      final locationName = await LocationService.getLocationName(position);
+      currentLocationName.value = locationName;
+    } catch (e) {
+      currentLocationName.value = 'Location unavailable';
+      print('Location error: $e');
     }
   }
 
@@ -73,7 +94,7 @@ class HomeController extends GetxController {
   Future<void> logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      Get.offAllNamed('/login');
+      // AuthWrapper will automatically handle navigation to login screen
     } catch (e) {
       error.value = 'Failed to logout: ${e.toString()}';
     }

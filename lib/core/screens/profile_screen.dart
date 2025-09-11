@@ -1,56 +1,48 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:qrscanner/core/services/profile_service.dart';
-import 'package:qrscanner/widgets/app_info_section.dart';
-import 'package:qrscanner/widgets/profile_header_card.dart';
-import 'package:qrscanner/widgets/no_profile_card.dart';
-import 'package:qrscanner/core/screens/profile_update_screen.dart';
-import 'package:qrscanner/core/screens/about_us_screen.dart';
-import 'package:qrscanner/core/screens/employees_screen.dart';
-import 'package:qrscanner/core/screens/leave_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+import 'package:qrscanner/widgets/abstract_background_wrapper.dart';
+
+import '../../widgets/info_row.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
-      appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF1A1A2E),
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F3460),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+      body: AbstractBackgroundWrapper(
         child: SafeArea(
+          top: true,
+          bottom: false,
           child: FutureBuilder<Map<String, dynamic>?>(
             future: ProfileService.getProfile(user!),
             builder: (context, snap) {
               if (!snap.hasData) {
-                return const Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingAnimationWidget.stretchedDots(
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                );
               }
               final data = snap.data;
               if (data == null) {
                 return const NoProfileCard();
               }
-              return ListView(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                children: [
-                  _buildProfileContent(user, data),
-                ],
+              return SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 120,left: 20,right: 20,top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildProfileContent(user, data),
+                  ],
+                ),
               );
             },
           ),
@@ -58,6 +50,7 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildProfileContent(User user, Map<String, dynamic> data) {
     final isAdmin = data['designation'] == 'admin';
     return Column(
@@ -71,17 +64,17 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoRow(Icons.email, 'Email', data['email'] ?? 'Not provided'),
+              InfoRow(Icons.email, 'Email', data['email'] ?? 'Not provided'),
               const SizedBox(height: 12),
-              _buildInfoRow(Icons.phone, 'Phone', data['phone'] ?? 'Not provided'),
+              InfoRow(Icons.phone, 'Phone', data['phone'] ?? 'Not provided'),
               const SizedBox(height: 12),
-              _buildInfoRow(Icons.location_on, 'Address', data['address'] ?? 'Not provided'),
+              InfoRow(Icons.location_on, 'Address', data['address'] ?? 'Not provided'),
             ],
           ),
         ),
@@ -91,15 +84,15 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoRow(Icons.access_time, 'Office Time', '10:00 AM - 07:00 PM'),
+              InfoRow(Icons.access_time, 'Office Time', '10:00 AM - 07:00 PM'),
               const SizedBox(height: 12),
-              _buildInfoRow(
+              InfoRow(
                 Icons.location_city,
                 'Office Address',
                 '23-D 2nd Floor, Commercial Area EME DHA Phase 12, Lahore, Punjab, Pakistan',
@@ -141,13 +134,13 @@ class ProfileScreen extends StatelessWidget {
           'Learn more about the app',
               () => Get.to(() => const AboutUsScreen()),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
 
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
           child: const AppInfoSection(),
@@ -156,39 +149,8 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: const Color(0xFF4ECDC4), size: 20),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+
+  
   Widget _buildActionButton(
       IconData icon,
       String title,
@@ -204,21 +166,12 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: Colors.white, size: 20),
-              ),
+              Icon(icon, color: Colors.white, size: 20),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -226,9 +179,10 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
+                        fontFamily: GoogleFonts.poppins().fontFamily,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -236,6 +190,7 @@ class ProfileScreen extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
+                        fontFamily: GoogleFonts.poppins().fontFamily,
                         color: Colors.white.withOpacity(0.7),
                         fontSize: 12,
                       ),

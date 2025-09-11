@@ -20,7 +20,7 @@ class QRService {
       double qrLat = qrData['lat'].toDouble();
       double qrLng = qrData['lng'].toDouble();
 
-      String locationName = 'Attendance Location';
+      String locationName = 'QR Location';
       final currentPosition = await LocationService.getCurrentLocation();
 
       {

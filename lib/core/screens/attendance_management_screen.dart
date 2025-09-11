@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:qrscanner/core/models/user_model.dart';
-import 'package:qrscanner/core/services/attendance_management_service.dart';
-import 'package:qrscanner/core/services/profile_service.dart';
-import 'package:qrscanner/core/utils/attendance_management_utils.dart';
-import 'package:qrscanner/widgets/attendance_management_filters.dart';
-import 'package:qrscanner/widgets/attendance_averages_widget.dart';
-import 'package:qrscanner/widgets/attendance_management_list.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class AttendanceManagementScreen extends StatefulWidget {
   const AttendanceManagementScreen({super.key});
   @override
@@ -39,7 +37,7 @@ class _AttendanceManagementScreenState extends State<AttendanceManagementScreen>
         setState(() {
           _userDesignation = _designationFromString(profile['designation'] as String?);
           _userDepartment = _departmentFromString(profile['department'] as String?);
-          _isAdmin = (profile['designation'] as String?) == 'admin';
+          _isAdmin = _userDesignation == Designation.admin;
           _isTeamLeader = _userDesignation == Designation.teamLeader;
 
           if (_isTeamLeader && _userDepartment != null) {
@@ -53,7 +51,7 @@ class _AttendanceManagementScreenState extends State<AttendanceManagementScreen>
   Designation _designationFromString(String? value) {
     switch (value) {
       case 'admin':
-        return Designation.employee;
+        return Designation.admin;
       case 'teamLeader':
         return Designation.teamLeader;
       case 'manager':
@@ -122,18 +120,27 @@ class _AttendanceManagementScreenState extends State<AttendanceManagementScreen>
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return AbstractBackgroundWrapper(
       child: Scaffold(
-        backgroundColor: const Color(0xFF1A1A2E),
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text('Attendance Management'),
-          backgroundColor: const Color(0xFF1A1A2E),
+          title: Text(
+              'Attendance Management',
+              style: TextStyle(
+            fontFamily: GoogleFonts.poppins().fontFamily,
+            )
+          ),
+          backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
         ),
         body: _loading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(
+                child: LoadingAnimationWidget.stretchedDots(
+                color: Colors.white,
+                size: 30,
+        ),)
             : _error != null
                 ? Center(
                     child: Padding(
@@ -224,8 +231,7 @@ class _AttendanceManagementScreenState extends State<AttendanceManagementScreen>
                         ),
                       ),
                     ],
-                  ),
-      ),
-    );
+                  ),),
+      );
   }
 }

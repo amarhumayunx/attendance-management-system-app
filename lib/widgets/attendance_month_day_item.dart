@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrscanner/core/utils/attendance_month_utils.dart';
+
 class AttendanceMonthDayItem extends StatelessWidget {
   final DateTime day;
   final Map<String, dynamic>? data;
@@ -8,6 +9,7 @@ class AttendanceMonthDayItem extends StatelessWidget {
     required this.day,
     this.data,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 import 'package:qrscanner/core/services/profile_service.dart';
 import 'package:qrscanner/core/models/user_model.dart';
-import 'package:qrscanner/screens/edit_user_screen.dart';
-import 'package:qrscanner/screens/admin_screen.dart';
+
+import '../core/screens/admin_screen.dart';
+import '../core/screens/edit_user_screen.dart';
 
 class EmployeesController extends GetxController {
   // Observable variables

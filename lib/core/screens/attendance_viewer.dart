@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qrscanner/core/services/attendance_viewer_service.dart';
-import 'package:qrscanner/widgets/attendance_summary_header.dart';
-import 'package:qrscanner/widgets/user_attendance_card.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/lib_exports.dart';
+
+import '../../widgets/abstract_background_wrapper.dart';
 class AttendanceViewer extends StatefulWidget {
   const AttendanceViewer({super.key});
   @override
@@ -30,7 +31,8 @@ class _AttendanceViewerState extends State<AttendanceViewer> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AbstractBackgroundWrapper(
+      child: Scaffold(
       appBar: AppBar(
         title: Text('Today\'s Attendance'),
         actions: [
@@ -42,7 +44,11 @@ class _AttendanceViewerState extends State<AttendanceViewer> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+        color: Colors.white,
+        size: 30,
+      ),)
           : _error != null
               ? Center(
                   child: Column(
@@ -92,7 +98,7 @@ class _AttendanceViewerState extends State<AttendanceViewer> {
                            ),
                          ),
                        ],
-                     ),
+                     ),),
     );
   }
 }

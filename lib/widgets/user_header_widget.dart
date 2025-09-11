@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/core/services/profile_service.dart';
 import 'package:qrscanner/core/screens/about_us_screen.dart';
 import 'package:qrscanner/core/utils/attendance_utils.dart';
+import 'package:qrscanner/res/assets_res.dart';
 import 'package:qrscanner/widgets/avatar_widget.dart';
+
 class UserHeader extends StatelessWidget {
   final String? uid;
   final VoidCallback onLogout;
@@ -13,10 +18,13 @@ class UserHeader extends StatelessWidget {
     required this.uid,
     required this.onLogout,
   });
+
   @override
   Widget build(BuildContext context) {
+
     final user = FirebaseAuth.instance.currentUser;
     final emailPrefix = user?.email?.split('@').first ?? (uid ?? '');
+
     return Row(
       children: [
         FutureBuilder<Map<String, dynamic>?>(
@@ -33,14 +41,11 @@ class UserHeader extends StatelessWidget {
                 ),
                 child: Center(
                   child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white.withOpacity(0.7),
-                      ),
-                    ),
+                    width: 10,
+                    height: 10,
+                    child: LoadingAnimationWidget.twoRotatingArc(
+                        color: Colors.white,
+                        size: 7)
                   ),
                 ),
               );
@@ -53,13 +58,9 @@ class UserHeader extends StatelessWidget {
               firstName: firstName,
               lastName: lastName,
               radius: 25,
-              backgroundColor: const Color(0xFF4ECDC4),
-              textColor: Colors.white,
+              textColor: Colors.black,
               fontSize: 18,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
-                ),
                 borderRadius: BorderRadius.circular(25),
               ),
             );
@@ -73,10 +74,11 @@ class UserHeader extends StatelessWidget {
                   children: [
                     Text(
                       emailPrefix.isNotEmpty ? emailPrefix : 'User',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
+                        fontFamily: GoogleFonts.poppins().fontFamily,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -85,7 +87,8 @@ class UserHeader extends StatelessWidget {
                       '-',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.7),
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                        color: Colors.black,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -132,9 +135,10 @@ class UserHeader extends StatelessWidget {
                       children: [
                         Text(
                           displayName.isNotEmpty ? displayName : '',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
                             color: Colors.white,
                           ),
                           maxLines: 1,
@@ -144,7 +148,8 @@ class UserHeader extends StatelessWidget {
                           designation.isNotEmpty ? AttendanceUtils.titleCase(designation) : '',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white.withOpacity(0.7),
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            color: Colors.white,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -156,18 +161,17 @@ class UserHeader extends StatelessWidget {
         ),
         IconButton(
           onPressed: () => _showUserMenu(context, emailPrefix, user),
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.notifications_outlined,
-              color: Colors.white,
-              size: 20,
-            ),
+          icon: SvgPicture.asset(
+            AssetsRes.NOTIFICATION,
+            color: Colors.white,
+            width: 25,
+            height: 25,
           ),
+          // const Icon(
+          //   Icons.notifications_outlined,
+          //   color: Colors.white,
+          //   size: 25,
+          // ),
         ),
       ],
     );
@@ -187,17 +191,17 @@ class UserHeader extends StatelessWidget {
               leading: const Icon(Icons.person, color: Colors.white),
               title: Text(
                 emailPrefix.isNotEmpty ? emailPrefix : (user?.email ?? 'User'),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white,fontFamily: GoogleFonts.poppins().fontFamily,),
               ),
               subtitle: Text(
                 user?.email ?? '',
-                style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                style: TextStyle(color: Colors.white.withOpacity(0.7),fontFamily: GoogleFonts.poppins().fontFamily,),
               ),
             ),
             const Divider(height: 0, color: Colors.white24),
             ListTile(
               leading: const Icon(Icons.settings, color: Colors.white),
-              title: const Text('Settings', style: TextStyle(color: Colors.white)),
+              title: Text('Settings', style: TextStyle(color: Colors.white,fontFamily: GoogleFonts.poppins().fontFamily,)),
               onTap: () {
                 Get.back();
                 Get.to(() => AboutUsScreen());
