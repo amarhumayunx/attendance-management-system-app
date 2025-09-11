@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/core/services/profile_service.dart';
 import 'package:qrscanner/core/screens/about_us_screen.dart';
 import 'package:qrscanner/core/utils/attendance_utils.dart';
@@ -74,22 +75,13 @@ class UserHeader extends StatelessWidget {
                   children: [
                     Text(
                       emailPrefix.isNotEmpty ? emailPrefix : 'User',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                      style: AppTypography.kMedium18,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       '-',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        color: Colors.black,
-                      ),
+                      style: AppTypography.kMedium14,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -135,22 +127,13 @@ class UserHeader extends StatelessWidget {
                       children: [
                         Text(
                           displayName.isNotEmpty ? displayName : '',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: GoogleFonts.poppins().fontFamily,
-                            color: Colors.white,
-                          ),
+                          style: AppTypography.kMedium18,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           designation.isNotEmpty ? AttendanceUtils.titleCase(designation) : '',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: GoogleFonts.poppins().fontFamily,
-                            color: Colors.white,
-                          ),
+                          style: AppTypography.kMedium14,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -167,11 +150,6 @@ class UserHeader extends StatelessWidget {
             width: 25,
             height: 25,
           ),
-          // const Icon(
-          //   Icons.notifications_outlined,
-          //   color: Colors.white,
-          //   size: 25,
-          // ),
         ),
       ],
     );

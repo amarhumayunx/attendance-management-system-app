@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 
 import '../res/assets_res.dart';
 
 class CircularCheckInButton extends StatefulWidget {
-  final bool canSwipe;
+  final bool canTap;
   final String label;
   final VoidCallback onTap;
   final String? currentTime;
@@ -14,7 +15,7 @@ class CircularCheckInButton extends StatefulWidget {
 
   const CircularCheckInButton({
     super.key,
-    required this.canSwipe,
+    required this.canTap,
     required this.label,
     required this.onTap,
     this.currentTime,
@@ -116,12 +117,7 @@ class _CircularCheckInButtonState extends State<CircularCheckInButton>
         const SizedBox(height: 4),
         Text(
           DateFormat('EEEE, dd MMM yyyy').format(DateTime.now()),
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.white,
-            fontFamily: GoogleFonts.poppins().fontFamily,
-            fontWeight: FontWeight.w500,
-          ),
+          style: AppTypography.kMedium14,
         ),
       ],
     );
@@ -134,7 +130,7 @@ class _CircularCheckInButtonState extends State<CircularCheckInButton>
         return Transform.scale(
           scale: _scaleAnimation.value,
           child: GestureDetector(
-            onTap: widget.canSwipe ? widget.onTap : null,
+            onTap: widget.canTap ? widget.onTap : null,
             child: Container(
               width: 200,
               height: 200,
@@ -166,12 +162,7 @@ class _CircularCheckInButtonState extends State<CircularCheckInButton>
                     const SizedBox(height: 4),
                     Text(
                       widget.label,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: AppTypography.kSemiBold16Black,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -205,12 +196,7 @@ class _CircularCheckInButtonState extends State<CircularCheckInButton>
           const SizedBox(width: 8),
           Text(
             widget.currentLocation ?? 'Location unavailable',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontFamily: GoogleFonts.poppins().fontFamily,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTypography.kMedium14,
           ),
         ],
       ),

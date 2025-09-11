@@ -3,7 +3,6 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/lib_exports.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
 class LeavePolicyViewerScreen extends StatefulWidget {
   const LeavePolicyViewerScreen({super.key});
   @override
@@ -68,11 +67,7 @@ class _LeavePolicyViewerScreenState extends State<LeavePolicyViewerScreen> {
                 ),
                 child: Text(
                   '${currentPage + 1} / $pages',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
             ),

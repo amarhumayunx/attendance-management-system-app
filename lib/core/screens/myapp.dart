@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qrscanner/core/services/in_app_notification_service.dart';
 import 'package:qrscanner/core/utils/responsive_utils.dart';
 import 'package:qrscanner/widgets/auth_wrapper.dart';
 
@@ -9,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      navigatorKey: InAppNotificationService.navigatorKey,
       theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,

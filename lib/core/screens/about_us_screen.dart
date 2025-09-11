@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qrscanner/lib_exports.dart';
-import 'package:qrscanner/widgets/abstract_background_wrapper.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -22,13 +20,9 @@ class AboutUsScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
             onPressed: () => Get.back(),
           ),
-          title: const Text(
+          title: Text(
             'About Us',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              color: Colors.white,
-            ),
+            style: AppTypography.kMedium18,
           ),
           centerTitle: true,
         ),

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/widgets/avatar_widget.dart';
 class ProfileHeaderCard extends StatelessWidget {
   final User user;
@@ -55,11 +55,7 @@ class ProfileHeaderCard extends StatelessWidget {
                   children: [
                     Text(
                       fullName.isNotEmpty ? fullName : 'User',
-                      style: GoogleFonts.poppins(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: AppTypography.kBold24,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -68,11 +64,7 @@ class ProfileHeaderCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                       child: Text(
                         designation.isNotEmpty ? designation : 'Employee',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                        style: AppTypography.kMedium18,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),

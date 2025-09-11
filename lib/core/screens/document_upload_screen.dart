@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/lib_exports.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
 class DocumentUploadScreen extends StatefulWidget {
   const DocumentUploadScreen({super.key});
   @override
@@ -92,24 +91,16 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
+                        Text(
                           'Document Upload',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                          style: AppTypography.kMedium18,
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     Text(
                       'Upload your important documents securely. All documents are encrypted and stored safely.',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
+                      style: AppTypography.kRegular14,
                     ),
                   ],
                 ),
@@ -117,13 +108,9 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
             ),
             const SizedBox(height: 32),
 
-            const Text(
+            Text(
               'Document Details',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+              style: AppTypography.kMedium18,
             ),
             const SizedBox(height: 20),
 
@@ -139,10 +126,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                 dropdownColor: const Color(0xFF0F3460),
                 decoration: InputDecoration(
                   labelText: 'Document Type',
-                  labelStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 14,
-                  ),
+                  labelStyle: AppTypography.kRegular14,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -242,17 +226,14 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                           size: 30,
                         ),
                       )
-                    : const Row(
+                    : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.cloud_upload, size: 20),
-                          SizedBox(width: 8),
+                          const Icon(Icons.cloud_upload, size: 20),
+                          const SizedBox(width: 8),
                           Text(
                             'Upload Document',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: AppTypography.kMedium16,
                           ),
                         ],
                       ),
@@ -273,10 +254,7 @@ Widget _darkTextField({
   return TextFormField(
     controller: controller,
     maxLines: maxLines,
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 16,
-    ),
+    style: AppTypography.kMedium16,
     decoration: InputDecoration(
       labelText: label,
       labelStyle: TextStyle(

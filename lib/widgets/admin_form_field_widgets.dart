@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../core/constants/app_typography.dart';
 class AdminFormFieldWidgets {
 
   static Widget buildSectionTitle(String title) {
@@ -28,9 +31,9 @@ class AdminFormFieldWidgets {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70, fontSize: 14),
+        labelStyle: AppTypography.kRegular14,
         hintText: helper,
-        hintStyle: const TextStyle(color: Colors.white54, fontSize: 12),
+        hintStyle: AppTypography.kRegular12,
         fillColor: Colors.white.withOpacity(0.05),
         filled: true,
         border: OutlineInputBorder(
@@ -67,9 +70,9 @@ class AdminFormFieldWidgets {
       initialValue: value,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70, fontSize: 14),
+        labelStyle: AppTypography.kRegular14,
         hintText: helper,
-        hintStyle: const TextStyle(color: Colors.white54, fontSize: 12),
+        hintStyle: AppTypography.kRegular12,
         fillColor: Colors.white.withOpacity(0.05),
         filled: true,
         border: OutlineInputBorder(
@@ -110,11 +113,7 @@ class AdminFormFieldWidgets {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(
-                color: (color ?? Colors.blueAccent).withOpacity(0.8),
-                fontSize: 11,
-                fontStyle: FontStyle.italic,
-              ),
+              style: AppTypography.kRegular12,
             ),
           ),
         ],
@@ -136,7 +135,7 @@ class AdminFormFieldWidgets {
       padding: const EdgeInsets.only(top: 12),
       child: Text(
         'Error: $error',
-        style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+        style: AppTypography.kRegular12,
         textAlign: TextAlign.center,
       ),
     );
@@ -158,18 +157,14 @@ class AdminFormFieldWidgets {
         ),
         onPressed: onPressed,
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.greenAccent),
+                child: LoadingAnimationWidget.stretchedDots(color: Colors.white, size: 10)
               )
             : Text(
                 text,
-                style: const TextStyle(
-                  color: Colors.greenAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+                style: AppTypography.kMedium16,
               ),
       ),
     );

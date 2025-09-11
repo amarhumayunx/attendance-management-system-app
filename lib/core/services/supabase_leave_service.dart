@@ -1,20 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:qrscanner/core/models/leave_model.dart';
 import 'package:qrscanner/core/models/notification_model.dart';
 import 'package:qrscanner/core/services/in_app_notification_service.dart';
 
-class LeaveService {
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  static const String _collection = 'leave_requests';
-  static const String _notificationsCollection = 'notifications';
+class SupabaseLeaveService {
+  static SupabaseClient get client {
+    try {
+      return Supabase.instance.client;
+    } catch (e) {
+      throw Exception('Supabase not initialized. Please check your Supabase configuration.');
+    }
+  }
 
   static Future<String> createLeaveRequest(LeaveRequest leaveRequest) async {
     try {
-      final docRef = await _firestore.collection(_collection).add(leaveRequest.toMap());
-      
+      final response = await client
+          .from('leave_requests')
+          .insert(leaveRequest.toSupabaseMap())
+          .select()
+          .single();
+
+      final leaveRequestId = response['id'] as String;
+
       // Create notification for admin
       await _createNotificationForAdmin(
-        leaveRequestId: docRef.id,
+        leaveRequestId: leaveRequestId,
         userId: leaveRequest.userId,
         title: 'New Leave Request',
         message: 'A new leave request has been submitted and requires your review.',
@@ -25,8 +36,8 @@ class LeaveService {
         title: 'Leave Request Submitted',
         message: 'Your leave request has been submitted successfully and is under review.',
       );
-      
-      return docRef.id;
+
+      return leaveRequestId;
     } catch (e) {
       throw Exception('Failed to create leave request: $e');
     }
@@ -40,16 +51,16 @@ class LeaveService {
   }) async {
     try {
       // Get all admin users
-      final adminQuery = await _firestore
-          .collection('users')
-          .where('designation', isEqualTo: 'admin')
-          .get();
+      final adminResponse = await client
+          .from('users')
+          .select('id')
+          .eq('designation', 'admin');
 
-      for (final adminDoc in adminQuery.docs) {
-        final adminId = adminDoc.id;
+      for (final admin in adminResponse) {
+        final adminId = admin['id'] as String;
         if (adminId != userId) { // Don't notify the user who submitted the request
           final notification = AppNotification(
-            id: '', // Will be set by Firestore
+            id: '', // Will be set by Supabase
             userId: adminId,
             title: title,
             message: message,
@@ -58,9 +69,9 @@ class LeaveService {
             leaveRequestId: leaveRequestId,
           );
 
-          await _firestore
-              .collection(_notificationsCollection)
-              .add(notification.toMap());
+          await client
+              .from('notifications')
+              .insert(notification.toSupabaseMap());
         }
       }
     } catch (e) {
@@ -70,13 +81,14 @@ class LeaveService {
 
   static Future<List<LeaveRequest>> getUserLeaveRequests(String userId) async {
     try {
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
-      return querySnapshot.docs
-          .map((doc) => LeaveRequest.fromDoc(doc))
+      final response = await client
+          .from('leave_requests')
+          .select()
+          .eq('userId', userId)
+          .order('createdAt', ascending: false);
+
+      return response
+          .map((data) => LeaveRequest.fromSupabaseMap(data))
           .toList();
     } catch (e) {
       throw Exception('Failed to fetch leave requests: $e');
@@ -85,12 +97,13 @@ class LeaveService {
 
   static Future<List<LeaveRequest>> getAllLeaveRequests() async {
     try {
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .orderBy('createdAt', descending: true)
-          .get();
-      return querySnapshot.docs
-          .map((doc) => LeaveRequest.fromDoc(doc))
+      final response = await client
+          .from('leave_requests')
+          .select()
+          .order('createdAt', ascending: false);
+
+      return response
+          .map((data) => LeaveRequest.fromSupabaseMap(data))
           .toList();
     } catch (e) {
       throw Exception('Failed to fetch all leave requests: $e');
@@ -106,7 +119,7 @@ class LeaveService {
     try {
       final updateData = {
         'status': status.name,
-        'statusUpdatedAt': FieldValue.serverTimestamp(),
+        'statusUpdatedAt': DateTime.now().toIso8601String(),
         'statusUpdatedBy': adminId,
       };
 
@@ -114,19 +127,20 @@ class LeaveService {
         updateData['adminNotes'] = adminNotes;
       }
 
-      await _firestore
-          .collection(_collection)
-          .doc(leaveRequestId)
-          .update(updateData);
+      await client
+          .from('leave_requests')
+          .update(updateData)
+          .eq('id', leaveRequestId);
 
       // Get the leave request to create notification for user
-      final leaveRequestDoc = await _firestore
-          .collection(_collection)
-          .doc(leaveRequestId)
-          .get();
+      final leaveRequestResponse = await client
+          .from('leave_requests')
+          .select()
+          .eq('id', leaveRequestId)
+          .single();
 
-      if (leaveRequestDoc.exists) {
-        final leaveRequest = LeaveRequest.fromDoc(leaveRequestDoc);
+      if (leaveRequestResponse.isNotEmpty) {
+        final leaveRequest = LeaveRequest.fromSupabaseMap(leaveRequestResponse);
         
         // Create notification for the user
         await _createNotificationForUser(
@@ -177,7 +191,7 @@ class LeaveService {
       }
 
       final notification = AppNotification(
-        id: '', // Will be set by Firestore
+        id: '', // Will be set by Supabase
         userId: userId,
         title: title,
         message: message,
@@ -186,9 +200,9 @@ class LeaveService {
         leaveRequestId: leaveRequestId,
       );
 
-      await _firestore
-          .collection(_notificationsCollection)
-          .add(notification.toMap());
+      await client
+          .from('notifications')
+          .insert(notification.toSupabaseMap());
     } catch (e) {
       print('Error creating user notification: $e');
     }
@@ -228,7 +242,10 @@ class LeaveService {
 
   static Future<void> deleteLeaveRequest(String leaveRequestId) async {
     try {
-      await _firestore.collection(_collection).doc(leaveRequestId).delete();
+      await client
+          .from('leave_requests')
+          .delete()
+          .eq('id', leaveRequestId);
     } catch (e) {
       throw Exception('Failed to delete leave request: $e');
     }
@@ -238,13 +255,14 @@ class LeaveService {
     LeaveStatus status,
   ) async {
     try {
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('status', isEqualTo: status.name)
-          .orderBy('createdAt', descending: true)
-          .get();
-      return querySnapshot.docs
-          .map((doc) => LeaveRequest.fromDoc(doc))
+      final response = await client
+          .from('leave_requests')
+          .select()
+          .eq('status', status.name)
+          .order('createdAt', ascending: false);
+
+      return response
+          .map((data) => LeaveRequest.fromSupabaseMap(data))
           .toList();
     } catch (e) {
       throw Exception('Failed to fetch leave requests by status: $e');
@@ -253,34 +271,35 @@ class LeaveService {
 
   static Future<int> getPendingLeaveRequestsCount() async {
     try {
-      final querySnapshot = await _firestore
-          .collection(_collection)
-          .where('status', isEqualTo: LeaveStatus.pending.name)
-          .get();
-      return querySnapshot.docs.length;
+      final response = await client
+          .from('leave_requests')
+          .select('id')
+          .eq('status', LeaveStatus.pending.name);
+
+      return response.length;
     } catch (e) {
       throw Exception('Failed to get pending leave requests count: $e');
     }
   }
 
   static Stream<List<LeaveRequest>> getUserLeaveRequestsStream(String userId) {
-    return _firestore
-        .collection(_collection)
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => LeaveRequest.fromDoc(doc))
+    return client
+        .from('leave_requests')
+        .stream(primaryKey: ['id'])
+        .eq('userId', userId)
+        .order('createdAt', ascending: false)
+        .map((data) => data
+            .map((item) => LeaveRequest.fromSupabaseMap(item))
             .toList());
   }
 
   static Stream<List<LeaveRequest>> getAllLeaveRequestsStream() {
-    return _firestore
-        .collection(_collection)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => LeaveRequest.fromDoc(doc))
+    return client
+        .from('leave_requests')
+        .stream(primaryKey: ['id'])
+        .order('createdAt', ascending: false)
+        .map((data) => data
+            .map((item) => LeaveRequest.fromSupabaseMap(item))
             .toList());
   }
 }

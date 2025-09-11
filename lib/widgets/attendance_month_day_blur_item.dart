@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/core/utils/attendance_month_utils.dart';
 
 class AttendanceMonthDayItemBlurred extends StatelessWidget {
@@ -42,16 +42,11 @@ class AttendanceMonthDayItemBlurred extends StatelessWidget {
                   children: [
                     Text(
                       day.day.toString().padLeft(2, '0'),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        color: Colors.white,
-                      ),
+                      style: AppTypography.kMedium18,
                     ),
                     Text(
                       AttendanceMonthUtils.weekdayShort(day),
-                      style: TextStyle(fontSize: 12, color: Colors.white70,fontFamily: GoogleFonts.poppins().fontFamily,),
+                      style: AppTypography.kRegular12
                     ),
                   ],
                 ),
@@ -65,16 +60,13 @@ class AttendanceMonthDayItemBlurred extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Check-in',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontWeight: FontWeight.w600)),
+                              style: AppTypography.kMedium16,
+                          ),
                           const SizedBox(height: 4),
                           Text(
                             AttendanceMonthUtils.timeOrDash(
                                 data?['checkInTime'] as String?),
-                            style: TextStyle(color: Colors.white,fontFamily: GoogleFonts.poppins().fontFamily,fontSize: 12),
+                            style: AppTypography.kRegular12,
                           ),
                         ],
                       ),
@@ -84,16 +76,12 @@ class AttendanceMonthDayItemBlurred extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Check-out',
-                              style: TextStyle(
-                                fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontWeight: FontWeight.w600)),
+                              style: AppTypography.kMedium16,),
                           const SizedBox(height: 4),
                           Text(
                             AttendanceMonthUtils.timeOrDash(
                                 data?['checkOutTime'] as String?),
-                            style: TextStyle(color: Colors.white,fontFamily: GoogleFonts.poppins().fontFamily,fontSize: 12),
+                            style: AppTypography.kRegular12,
                           ),
                         ],
                       ),
@@ -103,17 +91,13 @@ class AttendanceMonthDayItemBlurred extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Duration',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontWeight: FontWeight.w600)),
+                              style: AppTypography.kMedium16,),
                           const SizedBox(height: 4),
                           Text(
                             data != null
                                 ? AttendanceMonthUtils.durationOrDash(data!)
                                 : '-',
-                            style: TextStyle(color: Colors.white,fontFamily: GoogleFonts.poppins().fontFamily,fontSize: 12),
+                            style: AppTypography.kRegular12,
                           ),
                         ],
                       ),

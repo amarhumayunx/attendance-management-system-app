@@ -1,11 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/core/controllers/login_controller.dart';
 import 'package:qrscanner/res/assets_res.dart';
 import 'package:qrscanner/widgets/abstract_background_wrapper.dart';
+
+import '../../widgets/custom_text_field.dart';
+import '../../widgets/info_message_box.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -58,29 +61,14 @@ class LoginScreen extends StatelessWidget {
                         Center(
                           child: Text(
                             'Welcome',
-                            style: TextStyle(
-                              fontSize: 48,
-                              fontFamily: GoogleFonts.poppins().fontFamily,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white,
-                              height: 1.1,
-                              letterSpacing: -0.5,
-                            ),
+                            style: AppTypography.kBold48,
                           ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                         Center(
                           child: Text(
                             'Sign in to Zee-palm Attendance App',
-
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: GoogleFonts.poppins().fontFamily,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white,
-                              height: 1.1,
-                              letterSpacing: -0.5,
-                            ),
+                            style: AppTypography.kMedium18,
                           ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.06),
@@ -89,173 +77,65 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             children: [
 
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: TextFormField(
-                                  controller: controller.emailController,
-                                  style: TextStyle(
-                                    fontFamily: GoogleFonts.poppins().fontFamily,
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.alternate_email,
-                                      color: Colors.white,
-                                    ),
-                                    hintText: 'Email',
-                                    hintStyle: TextStyle(
-                                      fontFamily: GoogleFonts.poppins().fontFamily,
-                                      color: Colors.white.withOpacity(0.7),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 18,
-                                    ),
-                                  ),
-                                  validator: (v) {
-                                    if (v == null || v.trim().isEmpty) return 'Enter email';
-                                    if (!v.contains('@')) return 'Invalid email';
-                                    return null;
-                                  },
-                                ),
+                              CustomTextField(
+                                controller: controller.emailController,
+                                hintText: "Email",
+                                prefixIcon: Icons.alternate_email,
+                                textStyle: AppTypography.kMedium16,
+                                hintStyle: AppTypography.kMedium16,
+                                validator: (v) {
+                                  if (v == null || v.trim().isEmpty) return 'Enter email';
+                                  if (!v.contains('@')) return 'Invalid email';
+                                  return null;
+                                },
                               ),
                               const SizedBox(height: 16),
 
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 1,
+                              Obx(() => CustomTextField(
+                                controller: controller.passwordController,
+                                hintText: "Password",
+                                prefixIcon: Icons.password_rounded,
+                                textStyle: AppTypography.kMedium16,
+                                hintStyle: AppTypography.kMedium16,
+                                obscureText: !controller.isPasswordVisible.value,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    controller.isPasswordVisible.value
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Colors.white.withOpacity(0.7),
+                                    size: 20,
                                   ),
+                                  onPressed: controller.togglePasswordVisibility,
                                 ),
-                                child: Obx(() => TextFormField(
-                                  controller: controller.passwordController,
-                                  obscureText: !controller.isPasswordVisible.value,
-                                  style: TextStyle(
-                                    fontFamily: GoogleFonts.poppins().fontFamily,
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.password_rounded,
-                                      color: Colors.white,
-                                    ),
-                                    hintText: 'Password',
-                                    hintStyle: TextStyle(
-                                      color: Colors.white.withOpacity(0.7),
-                                      fontSize: 16,
-                                      fontFamily: GoogleFonts.poppins().fontFamily,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        controller.isPasswordVisible.value
-                                            ? Icons.visibility_outlined
-                                            : Icons.visibility_off_outlined,
-                                        color: Colors.white.withOpacity(0.7),
-                                        size: 20,
-                                      ),
-                                      onPressed: controller.togglePasswordVisibility,
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 18,
-                                    ),
-                                  ),
-                                  validator: (v) {
-                                    if (v == null || v.isEmpty) return 'Enter password';
-                                    if (v.length < 6) return 'Min 6 characters';
-                                    return null;
-                                  },
-                                )),
-                              ),
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) return 'Enter password';
+                                  if (v.length < 6) return 'Min 6 characters';
+                                  return null;
+                                },
+                              )),
                               const SizedBox(height: 24),
 
+                              // Error Message
                               Obx(() => controller.error.value != null
-                                  ? Container(
-                                margin: const EdgeInsets.only(bottom: 20),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.red.withOpacity(0.3),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.error_outline,
-                                      color: Colors.red.shade300,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        controller.error.value!,
-                                        style: TextStyle(
-                                          fontFamily: GoogleFonts.poppins().fontFamily,
-                                          color: Colors.red.shade200,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ? InfoMessageBox(
+                                message: controller.error.value!,
+                                color: Colors.red,
+                                icon: Icons.error_outline,
                               )
                                   : const SizedBox.shrink()),
 
+                              // Warning Message
                               Obx(() => controller.loginAttempts.value > 0 && !controller.isLocked.value
-                                  ? Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.orange.withOpacity(0.3),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.warning_amber_outlined,
-                                      color: Colors.orange.shade300,
-                                      size: 16,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        'Failed attempts: ${controller.loginAttempts.value}/${LoginController.maxLoginAttempts}',
-                                        style: TextStyle(
-                                          fontFamily: GoogleFonts.poppins().fontFamily,
-                                          color: Colors.orange.shade200,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ? InfoMessageBox(
+                                message:
+                                'Failed attempts: ${controller.loginAttempts.value}/${LoginController.maxLoginAttempts}',
+                                color: Colors.orange,
+                                icon: Icons.warning_amber_outlined,
                               )
                                   : const SizedBox.shrink()),
 
+                              // Login Button
                               Obx(() => Container(
                                 width: double.infinity,
                                 height: 56,
@@ -282,17 +162,12 @@ class LoginScreen extends StatelessWidget {
                                     width: 24,
                                     child: LoadingAnimationWidget.inkDrop(
                                       color: Colors.white,
-                                      size: 24
+                                      size: 24,
                                     ),
                                   )
                                       : Text(
                                     controller.loginButtonText,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: GoogleFonts.poppins().fontFamily,
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: AppTypography.kMedium16,
                                   ),
                                 ),
                               )),
@@ -309,12 +184,7 @@ class LoginScreen extends StatelessWidget {
                   child: Text(
                     'Zee-Palm Attendance System © 2025',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: Colors.white.withOpacity(0.6),
-                      fontWeight: FontWeight.w300,
-                    ),
+                    style: AppTypography.kMedium12,
                   ),
                 ),
               ],

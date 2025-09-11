@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 class AdminUploadHeaderWidget extends StatelessWidget {
   const AdminUploadHeaderWidget({super.key});
   @override
@@ -38,21 +39,14 @@ class AdminUploadHeaderWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+      Text(
             'Upload Leave Policy',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: AppTypography.kBold24,
           ),
           const SizedBox(height: 8),
           Text(
             'Upload the leave policy PDF to Supabase Storage for users to view',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white.withOpacity(0.8),
-            ),
+            style: AppTypography.kMedium14,
             textAlign: TextAlign.center,
           ),
         ],

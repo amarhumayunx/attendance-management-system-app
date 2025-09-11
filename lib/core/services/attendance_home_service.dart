@@ -34,13 +34,13 @@ class AttendanceHomeService {
     }
   }
 
-  static bool canSwipe(Map<String, dynamic>? todayData) {
+  static bool canTap(Map<String, dynamic>? todayData) {
     if (todayData == null) return true;
     if (todayData['checkOutTime'] != null) return false;
     return true;
   }
 
-  static String getSwipeLabel(Map<String, dynamic>? todayData) {
+  static String getTapLabel(Map<String, dynamic>? todayData) {
     if (todayData == null) return 'Tap to Check In';
     if (todayData['checkOutTime'] != null) return 'Attendance Completed';
     final ci = todayData['checkInTime'];

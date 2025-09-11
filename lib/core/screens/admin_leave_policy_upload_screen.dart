@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:qrscanner/lib_exports.dart';
 import 'dart:io';
 
-import '../../widgets/abstract_background_wrapper.dart';
 class AdminLeavePolicyUploadScreen extends StatefulWidget {
   const AdminLeavePolicyUploadScreen({super.key});
   @override

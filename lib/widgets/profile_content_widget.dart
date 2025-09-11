@@ -3,8 +3,11 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../core/screens/about_us_screen.dart';
+import '../core/screens/admin_leave_requests_screen.dart';
 import '../core/screens/employees_screen.dart';
+import '../core/screens/leave_request_screen.dart';
 import '../core/screens/leave_screen.dart';
+import '../core/screens/notifications_screen.dart';
 import '../core/screens/profile_update_screen.dart';
 import 'action_button_row.dart';
 import 'info_row.dart';
@@ -59,17 +62,39 @@ class ProfileContent extends StatelessWidget {
                 () => Get.to(() => const EmployeesScreen()),
           ),
           const SizedBox(height: 12),
+          ActionButton(
+            Icons.event_note,
+            'Leave Requests',
+            'Review and manage leave requests',
+                () => Get.to(() => const AdminLeaveRequestsScreen()),
+          ),
+          const SizedBox(height: 12),
         ] else ...[
           ActionButton(
             Icons.event_available,
-            'Leave Request',
-            'Submit a leave request',
+            'Submit Leave Request',
+            'Submit a new leave request',
+                () => Get.to(() => const LeaveRequestScreen()),
+          ),
+          const SizedBox(height: 12),
+          ActionButton(
+            Icons.event_note,
+            'My Leave Requests',
+            'View your leave request history',
                 () => Get.to(() => const LeaveScreen()),
           ),
           const SizedBox(height: 12),
         ],
 
         /// Common actions
+        ActionButton(
+          Icons.notifications,
+          'Notifications',
+          'View your notifications',
+              () => Get.to(() => const NotificationsScreen()),
+        ),
+        const SizedBox(height: 12),
+
         ActionButton(
           Icons.edit,
           'My Profile',

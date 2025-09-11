@@ -76,13 +76,13 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
   Widget build(BuildContext context) {
     return AbstractBackgroundWrapper(
       child: Scaffold(
-        backgroundColor: Colors.transparent, // 👈 transparent scaffold
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: const Text(
             'Update Profile',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.transparent, // 👈 transparent appbar
+          backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
@@ -118,13 +118,9 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Admin Info',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                              style: AppTypography.kMedium18,
                             ),
                             const SizedBox(height: 16),
                             _ReadOnlyRow(
@@ -156,13 +152,9 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                const Text(
+                Text(
                   'Personal Information',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  style: AppTypography.kMedium18,
                 ),
                 const SizedBox(height: 20),
 
@@ -230,7 +222,6 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   const SizedBox(height: 20),
                 ],
 
-                /// --- Save Button ---
                 SizedBox(
                   height: 52,
                   child: ElevatedButton(
@@ -249,12 +240,9 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white),
                     )
-                        : const Text(
+                        : Text(
                       'Save Changes',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTypography.kMedium16,
                     ),
                   ),
                 ),
@@ -280,12 +268,9 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         size: 200,
                         ),
                     )
-                        : const Text(
+                        : Text(
                       'Upload Documents',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTypography.kMedium16,
                     ),
                   ),
                 ),

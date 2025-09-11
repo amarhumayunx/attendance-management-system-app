@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/core/utils/attendance_management_utils.dart';
 import 'package:qrscanner/core/models/user_model.dart';
 import 'package:qrscanner/widgets/avatar_widget.dart';
@@ -84,11 +85,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                 child: Text(
                   'Check In',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.greenAccent,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
               // Check Out
@@ -96,11 +93,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                 child: Text(
                   'Check Out',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.orangeAccent,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
               // Duration
@@ -108,11 +101,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                 child: Text(
                   'Duration',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.lightBlueAccent,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
             ],
@@ -155,21 +144,14 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                         const SizedBox(height: 6),
                         Text(
                           '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
+                          style: AppTypography.kMedium14,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         if ((user['employeeId'] as String?)?.isNotEmpty == true)
                           Text(
                             'ID: ${user['employeeId'] ?? ''}',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 11,
-                            ),
+                            style: AppTypography.kRegular12,
                           ),
                       ],
                     ),
@@ -181,11 +163,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                 child: Text(
                   formattedCheckIn,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
               // Check Out Time
@@ -193,11 +171,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                 child: Text(
                   formattedCheckOut,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
               // Duration
@@ -205,11 +179,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                 child: Text(
                   duration,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+                  style: AppTypography.kRegular12,
                 ),
               ),
             ],
@@ -238,11 +208,7 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                       const SizedBox(width: 6),
                       Text(
                         'Location',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppTypography.kRegular12,
                       ),
                     ],
                   ),
@@ -265,18 +231,12 @@ class _UserAttendanceManagementCardState extends State<UserAttendanceManagementC
                           children: [
                             Text(
                               AttendanceManagementUtils.formatLocation(lat, lng),
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 10,
-                              ),
+                              style: AppTypography.kRegular10,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Location where attendance was marked',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontSize: 9,
-                              ),
+                              style: AppTypography.kRegular10,
                             ),
                           ],
                         ),

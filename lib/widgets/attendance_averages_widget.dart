@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/constants/app_typography.dart';
 class AttendanceAveragesWidget extends StatelessWidget {
   final Map<String, dynamic> averages;
   const AttendanceAveragesWidget({
@@ -89,11 +91,7 @@ class AttendanceAveragesWidget extends StatelessWidget {
               fit: BoxFit.scaleDown,
               child: Text(
                 value,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTypography.kMedium16,
                 maxLines: 1,
               ),
             ),
@@ -102,11 +100,7 @@ class AttendanceAveragesWidget extends StatelessWidget {
               fit: BoxFit.scaleDown,
               child: Text(
                 title,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: AppTypography.kRegular12,
                 textAlign: TextAlign.center,
                 maxLines: 2,
               ),
@@ -144,11 +138,7 @@ class AttendanceAveragesWidget extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTypography.kMedium16,
               maxLines: 1,
             ),
           ),
@@ -157,11 +147,7 @@ class AttendanceAveragesWidget extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: Text(
               title,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.9),
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
+              style: AppTypography.kRegular12,
               textAlign: TextAlign.center,
               maxLines: 2,
             ),

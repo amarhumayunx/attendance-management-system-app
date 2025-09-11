@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/lib_exports.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
 class AttendanceManagementScreen extends StatefulWidget {
   const AttendanceManagementScreen({super.key});
   @override
@@ -206,11 +205,7 @@ class _AttendanceManagementScreenState extends State<AttendanceManagementScreen>
                               const SizedBox(width: 8),
                               Text(
                                 'Viewing: ${AttendanceManagementUtils.getDepartmentDisplayName(_userDepartment!)}',
-                                style: const TextStyle(
-                                  color: Color(0xFF4ECDC4),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
+                                style: AppTypography.kRegular14,
                               ),
                             ],
                           ),

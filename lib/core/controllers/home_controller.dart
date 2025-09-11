@@ -20,8 +20,8 @@ class HomeController extends GetxController {
   bool get hasCheckedIn => todayData.value?['checkInTime'] != null && 
                           todayData.value?['checkInTime'] != 'Not checked in';
   bool get hasCheckedOut => todayData.value?['checkOutTime'] != null;
-  bool get canSwipe => AttendanceHomeService.canSwipe(todayData.value);
-  String get swipeLabel => AttendanceHomeService.getSwipeLabel(todayData.value);
+  bool get canTap => AttendanceHomeService.canTap(todayData.value);
+  String get TapLabel => AttendanceHomeService.getTapLabel(todayData.value);
   String get checkInTime => AttendanceUtils.formatTime(todayData.value?['checkInTime'] as String?);
   String get checkOutTime => AttendanceUtils.formatTime(todayData.value?['checkOutTime'] as String?);
   String get todayDuration => AttendanceUtils.formatDuration(todayData.value ?? {});

@@ -1,387 +1,358 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:qrscanner/core/models/leave_model.dart';
-import 'package:qrscanner/core/services/leave_service.dart';
+import 'package:qrscanner/lib_exports.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
+
 class LeaveScreen extends StatefulWidget {
   const LeaveScreen({super.key});
   @override
   State<LeaveScreen> createState() => _LeaveScreenState();
 }
+
 class _LeaveScreenState extends State<LeaveScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _reasonController = TextEditingController();
-  DateTime? _startDate;
-  DateTime? _endDate;
-  bool _isLoading = false;
-  @override
-  void dispose() {
-    _reasonController.dispose();
-    super.dispose();
-  }
-  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: isStartDate ? DateTime.now() : _startDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isStartDate) {
-          _startDate = picked;
-
-          if (_endDate != null && _endDate!.isBefore(picked)) {
-            _endDate = null;
-          }
-        } else {
-          _endDate = picked;
-        }
-      });
-    }
-  }
-  Future<void> _submitLeaveRequest() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_startDate == null || _endDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select both start and end dates'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-    if (_endDate!.isBefore(_startDate!)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('End date cannot be before start date'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception('User not authenticated');
-      }
-      final leaveRequest = LeaveRequest(
-        id: '',
-        userId: user.email!,
-        reason: _reasonController.text.trim(),
-        startDate: _startDate!,
-        endDate: _endDate!,
-      );
-      await LeaveService.createLeaveRequest(leaveRequest);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Leave request submitted successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        _reasonController.clear();
-        _startDate = null;
-        _endDate = null;
-        setState(() {});
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error submitting leave request: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-  @override
-
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('User not authenticated'),
+        ),
+      );
+    }
+
     return AbstractBackgroundWrapper(
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text(
-            'Leave Request',
-            style: TextStyle(color: Colors.white),
-          ),
           backgroundColor: Colors.transparent,
-          iconTheme: const IconThemeData(color: Colors.white),
           elevation: 0,
+          scrolledUnderElevation: 0,
+          foregroundColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+            onPressed: () => Get.back(),
+          ),
+          title: Text(
+            'My Leave Requests',
+            style: AppTypography.kMedium18,
+          ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () => Get.to(() => const LeaveRequestScreen()),
+              icon: const Icon(Icons.add),
+              tooltip: 'Submit New Request',
+            ),
+          ],
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
+          top: true,
+          bottom: false,
+          child: StreamBuilder<List<LeaveRequest>>(
+            stream: SupabaseLeaveService.getUserLeaveRequestsStream(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: LoadingAnimationWidget.stretchedDots(
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  /// HEADER CARD
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.1)),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.event_available,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Submit Leave Request',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Fill in the details below to request leave',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  /// REASON CARD
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.1)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Reason for Leave',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: _reasonController,
-                          maxLines: 4,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText:
-                            'Please provide a reason for your leave request...',
-                            hintStyle:
-                            TextStyle(color: Colors.white.withOpacity(0.5)),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                              const BorderSide(color: Color(0xFF4ECDC4)),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.05),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Please provide a reason for leave';
-                            }
-                            if (value.trim().length < 10) {
-                              return 'Reason must be at least 10 characters long';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  /// DURATION CARD
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.1)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Leave Duration',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        /// START DATE
-                        InkWell(
-                          onTap: () => _selectDate(context, true),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.05),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.calendar_today,
-                                    color: Color(0xFF4ECDC4)),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    _startDate == null
-                                        ? 'Select Start Date'
-                                        : 'Start: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                    style: TextStyle(
-                                      color: _startDate == null
-                                          ? Colors.white.withOpacity(0.5)
-                                          : Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                const Icon(Icons.chevron_right,
-                                    color: Colors.white),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        /// END DATE
-                        InkWell(
-                          onTap: _startDate == null
-                              ? null
-                              : () => _selectDate(context, false),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.05),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.calendar_today,
-                                    color: Color(0xFF4ECDC4)),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    _endDate == null
-                                        ? 'Select End Date'
-                                        : 'End: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                    style: TextStyle(
-                                      color: _endDate == null
-                                          ? Colors.white.withOpacity(0.5)
-                                          : Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                const Icon(Icons.chevron_right,
-                                    color: Colors.white),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  /// SUBMIT BUTTON
-                  SizedBox(
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _submitLeaveRequest,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF4ECDC4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
+                      Icon(
+                        Icons.error_outline,
+                        color: AppColors.kError,
+                        size: 48,
                       ),
-                      child: _isLoading
-                          ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: LoadingAnimationWidget.stretchedDots(
-                          color: Colors.white,
-                          size: 30,
+                      const SizedBox(height: 16),
+                      Text(
+                        'Error loading leave requests',
+                        style: AppTypography.kMedium16,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        snapshot.error.toString(),
+                        style: AppTypography.kRegular14.copyWith(
+                          color: AppColors.kTextMuted,
                         ),
-                      )
-                          : const Text(
-                        'Submit Leave Request',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {});
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.kPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'Retry',
+                          style: AppTypography.kMedium14.copyWith(
+                            color: Colors.white,
+                          ),
+                          ),
+                        ),
+                      ],
+                  ),
+                );
+              }
+
+              final leaveRequests = snapshot.data ?? [];
+
+              if (leaveRequests.isEmpty) {
+                return Center(
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      Icon(
+                        Icons.event_note_outlined,
+                        color: AppColors.kTextMuted,
+                        size: 48,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No leave requests',
+                        style: AppTypography.kMedium16,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'You haven\'t submitted any leave requests yet.',
+                        style: AppTypography.kRegular14.copyWith(
+                          color: AppColors.kTextMuted,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () => Get.to(() => const LeaveRequestScreen()),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Submit New Request'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.kPrimary,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                );
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(22),
+                itemCount: leaveRequests.length,
+                itemBuilder: (context, index) {
+                  final leaveRequest = leaveRequests[index];
+                  return _buildLeaveRequestCard(leaveRequest);
+                },
+              );
+            },
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildLeaveRequestCard(LeaveRequest leaveRequest) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+        color: AppColors.kSurface.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.kBorder),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Text(
+                        'Leave Request',
+                        style: AppTypography.kMedium16,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${_formatDate(leaveRequest.startDate)} - ${_formatDate(leaveRequest.endDate)}',
+                        style: AppTypography.kRegular14.copyWith(
+                          color: AppColors.kTextSecondary,
+                        ),
+                      ),
+                              ],
+                            ),
+                          ),
+                _buildStatusChip(leaveRequest.status),
+              ],
+                        ),
+                        const SizedBox(height: 12),
+            Text(
+              leaveRequest.reason,
+              style: AppTypography.kRegular14,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 12),
+            Row(
+                              children: [
+                Icon(
+                  Icons.access_time,
+                  color: AppColors.kTextMuted,
+                  size: 16,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Submitted ${_getTimeAgo(leaveRequest.createdAt)}',
+                  style: AppTypography.kRegular12.copyWith(
+                    color: AppColors.kTextMuted,
+                  ),
+                ),
+                const Spacer(),
+                if (leaveRequest.imageUrls != null && leaveRequest.imageUrls!.isNotEmpty)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.attach_file,
+                        color: AppColors.kPrimary,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${leaveRequest.imageUrls!.length} attachment(s)',
+                        style: AppTypography.kRegular12.copyWith(
+                          color: AppColors.kPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            if (leaveRequest.adminNotes != null && leaveRequest.adminNotes!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.kCardBackground.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.kBorder.withOpacity(0.5)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Admin Notes',
+                      style: AppTypography.kMedium12.copyWith(
+                        color: AppColors.kPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      leaveRequest.adminNotes!,
+                      style: AppTypography.kRegular12,
+                  ),
+                ],
+              ),
+            ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(LeaveStatus status) {
+    Color backgroundColor;
+    Color textColor;
+
+    switch (status) {
+      case LeaveStatus.pending:
+        backgroundColor = AppColors.kWarning.withOpacity(0.2);
+        textColor = AppColors.kWarning;
+        break;
+      case LeaveStatus.approved:
+        backgroundColor = AppColors.kSuccess.withOpacity(0.2);
+        textColor = AppColors.kSuccess;
+        break;
+      case LeaveStatus.rejected:
+        backgroundColor = AppColors.kError.withOpacity(0.2);
+        textColor = AppColors.kError;
+        break;
+      case LeaveStatus.viewed:
+        backgroundColor = AppColors.kInfo.withOpacity(0.2);
+        textColor = AppColors.kInfo;
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        _getStatusDisplayName(status),
+        style: AppTypography.kMedium12.copyWith(
+          color: textColor,
+        ),
+      ),
+    );
+  }
+
+  String _getStatusDisplayName(LeaveStatus status) {
+    switch (status) {
+      case LeaveStatus.pending:
+        return 'Pending';
+      case LeaveStatus.approved:
+        return 'Approved';
+      case LeaveStatus.rejected:
+        return 'Rejected';
+      case LeaveStatus.viewed:
+        return 'Viewed';
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  String _getTimeAgo(Timestamp? timestamp) {
+    if (timestamp == null) return 'Unknown';
+    
+    final now = DateTime.now();
+    final time = timestamp.toDate();
+    final difference = now.difference(time);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+    } else {
+      return 'Just now';
+    }
   }
 }

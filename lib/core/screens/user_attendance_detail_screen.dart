@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/lib_exports.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
 
 class UserAttendanceDetailScreen extends StatefulWidget {
   final String userId;

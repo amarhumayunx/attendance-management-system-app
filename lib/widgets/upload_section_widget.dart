@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 class UploadSectionWidget extends StatelessWidget {
   final bool uploading;
   final String? uploadStatus;
@@ -32,13 +33,9 @@ class UploadSectionWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Upload to Supabase Storage',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: AppTypography.kMedium18,
           ),
           const SizedBox(height: 16),
 
@@ -79,11 +76,7 @@ class UploadSectionWidget extends StatelessWidget {
                   : const Icon(Icons.cloud_upload, color: Colors.white),
               label: Text(
                 uploading ? 'Uploading...' : 'Upload to Supabase',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
+                style: AppTypography.kMedium16,
               ),
             ),
           ),
@@ -106,10 +99,7 @@ class UploadSectionWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       uploadStatus!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+                      style: AppTypography.kMedium14,
                     ),
                   ),
                 ],
@@ -135,14 +125,10 @@ class UploadSectionWidget extends StatelessWidget {
                     children: [
                       Icon(Icons.error_outline, color: Colors.red, size: 20),
                       const SizedBox(width: 8),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Upload Error',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: AppTypography.kMedium16,
                         ),
                       ),
                     ],
@@ -150,10 +136,7 @@ class UploadSectionWidget extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     errorMessage!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: AppTypography.kMedium14,
                   ),
 
                   if (troubleshooting != null) ...[
@@ -174,23 +157,16 @@ class UploadSectionWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.lightbulb, color: Colors.orange, size: 16),
                               const SizedBox(width: 6),
-                              const Text(
+                              Text(
                                 'Troubleshooting:',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
+                                style: AppTypography.kMedium12,
                               ),
                             ],
                           ),
                           const SizedBox(height: 4),
                           Text(
                             troubleshooting!,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                            ),
+                            style: AppTypography.kRegular12,
                           ),
                         ],
                       ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../core/constants/app_typography.dart';
 class LocationInfoWidget extends StatelessWidget {
   final Position? currentPosition;
   final bool locationLoading;
@@ -36,12 +37,7 @@ class LocationInfoWidget extends StatelessWidget {
         children: [
           Text(
             'Current Location',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: GoogleFonts.poppins().fontFamily,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
+            style: AppTypography.kMedium14,
           ),
           const SizedBox(height: 12),
           if (locationLoading)
@@ -67,7 +63,7 @@ class LocationInfoWidget extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           'Loading location...',
-          style: TextStyle(color: Colors.white70, fontSize: 12,fontFamily: GoogleFonts.poppins().fontFamily,),
+          style: AppTypography.kMedium12,
         ),
       ],
     );
@@ -82,12 +78,7 @@ class LocationInfoWidget extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               'Lat: ${currentPosition!.latitude.toStringAsFixed(6)}',
-              style: TextStyle(
-                color: Colors.white,
-
-                fontFamily: GoogleFonts.poppins().fontFamily,
-                fontSize: 11,
-              ),
+              style: AppTypography.kMedium12,
             ),
           ],
         ),
@@ -99,22 +90,14 @@ class LocationInfoWidget extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               'Lng: ${currentPosition!.longitude.toStringAsFixed(6)}',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: GoogleFonts.poppins().fontFamily,
-                fontSize: 11,
-              ),
+              style: AppTypography.kMedium12,
             ),
           ],
         ),
         const SizedBox(height: 4),
         Text(
           'Accuracy: ±${currentPosition!.accuracy.toStringAsFixed(1)}m',
-          style: TextStyle(
-            color: Colors.white70,
-            fontFamily: GoogleFonts.poppins().fontFamily,
-            fontSize: 11,
-          ),
+          style: AppTypography.kMedium12,
         ),
       ],
     );
@@ -127,7 +110,7 @@ class LocationInfoWidget extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           'Location unavailable',
-          style: TextStyle(color: Colors.redAccent, fontSize: 12,fontFamily: GoogleFonts.poppins().fontFamily,),
+          style: AppTypography.kMedium12,
         ),
       ],
     );

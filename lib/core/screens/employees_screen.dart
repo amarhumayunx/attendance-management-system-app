@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qrscanner/lib_exports.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
 class EmployeesScreen extends StatelessWidget {
   const EmployeesScreen({super.key});
   @override
@@ -50,10 +49,7 @@ class EmployeesScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           displayName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                          style: AppTypography.kMedium16,
                         ),
                       );
                     }).toList();
@@ -71,10 +67,7 @@ class EmployeesScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           displayName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                          style: AppTypography.kMedium16,
                         ),
                       ),
                     );
@@ -114,22 +107,15 @@ class EmployeesScreen extends StatelessWidget {
                         size: 48,
                       ),
                       const SizedBox(height: 16),
-                      const Text(
+                      Text(
                         'Error loading employees',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTypography.kMedium18,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
                       Text(
                             controller.error.value,
-                        style: TextStyle(
-                          color: Colors.red.withOpacity(0.7),
-                          fontSize: 14,
-                        ),
+                        style: AppTypography.kMedium14,
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -157,22 +143,15 @@ class EmployeesScreen extends StatelessWidget {
                         size: 48,
                       ),
                       const SizedBox(height: 16),
-                      const Text(
+                      Text(
                         'No Employees Found',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTypography.kMedium18,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Add your first employee to get started',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 14,
-                        ),
+                        style: AppTypography.kMedium14,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
@@ -272,11 +251,7 @@ class EmployeesScreen extends StatelessWidget {
                       child: imageUrl.isEmpty
                           ? Text(
                               fullName.isNotEmpty ? fullName[0].toUpperCase() : '?',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: AppTypography.kBold20,
                             )
                           : null,
                     ),
@@ -290,11 +265,7 @@ class EmployeesScreen extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   fullName,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: AppTypography.kMedium16,
                                 ),
                               ),
                               if (isTeamLeader)
@@ -304,13 +275,9 @@ class EmployeesScreen extends StatelessWidget {
                                     color: const Color(0xFFFFB84D),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'TL',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: AppTypography.kRegular10,
                                   ),
                                 )
                               else if (isAdmin)
@@ -320,13 +287,9 @@ class EmployeesScreen extends StatelessWidget {
                                     color: const Color(0xFFFF6B9D),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'ADMIN',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: AppTypography.kRegular10,
                                   ),
                                 ),
                             ],
@@ -334,10 +297,7 @@ class EmployeesScreen extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             email,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 13,
-                            ),
+                            style: AppTypography.kRegular14,
                           ),
                           const SizedBox(height: 4),
                           Row(
@@ -345,21 +305,13 @@ class EmployeesScreen extends StatelessWidget {
                               if (department.isNotEmpty) ...[
                                 Text(
                                   ProfileUtils.getDepartmentDisplayName(department),
-                                  style: const TextStyle(
-                                    color: Color(0xFF4ECDC4),
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: AppTypography.kRegular10,
                                 ),
                                 const SizedBox(width: 8),
                               ],
                               Text(
                                 isActive ? 'Active' : 'Inactive',
-                                style: TextStyle(
-                                  color: isActive ? Colors.green : Colors.red,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: AppTypography.kRegular10,
                               ),
                             ],
                           ),

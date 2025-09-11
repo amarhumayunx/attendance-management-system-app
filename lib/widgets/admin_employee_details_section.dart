@@ -120,7 +120,7 @@ class AdminEmployeeDetailsSection extends StatelessWidget {
               child: AdminFormFieldWidgets.buildInputField(
                 controller: salaryController,
                 label: 'Salary *',
-                helper: 'In INR',
+                helper: 'In PKR',
                 keyboardType: TextInputType.number,
                 validator: AdminFormUtils.validateSalary,
               ),

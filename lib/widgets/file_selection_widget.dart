@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 class FileSelectionWidget extends StatelessWidget {
   final File? selectedFile;
   final bool uploading;
@@ -27,13 +28,9 @@ class FileSelectionWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Select PDF File',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: AppTypography.kMedium18,
           ),
           const SizedBox(height: 16),
 
@@ -63,13 +60,9 @@ class FileSelectionWidget extends StatelessWidget {
               ),
               onPressed: uploading ? null : onPickFile,
               icon: const Icon(Icons.file_upload, color: Colors.white),
-              label: const Text(
+              label: Text(
                 'Choose PDF File',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
+                style: AppTypography.kMedium16,
               ),
             ),
           ),

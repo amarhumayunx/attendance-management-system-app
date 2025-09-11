@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 
 class ActionButton extends StatelessWidget {
   final IconData icon;
@@ -39,21 +39,12 @@ class ActionButton extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTypography.kMedium16,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 12,
-                      ),
+                      style: AppTypography.kRegular12,
                     ),
                   ],
                 ),

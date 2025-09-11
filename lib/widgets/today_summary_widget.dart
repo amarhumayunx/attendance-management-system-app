@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 
 class TodaySummaryWidget extends StatelessWidget {
   final Map<String, dynamic>? todayData;
@@ -90,25 +90,13 @@ class TodaySummaryWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           value,
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: GoogleFonts.poppins().fontFamily,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-            letterSpacing: -0.2,
-          ),
+          style: AppTypography.kMedium16,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 4),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 12,
-            fontFamily: GoogleFonts.poppins().fontFamily,
-            color: Colors.white.withOpacity(0.8),
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.1,
-          ),
+          style: AppTypography.kMedium12,
           textAlign: TextAlign.center,
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/widgets/user_attendance_management_card.dart';
 import 'package:qrscanner/core/utils/attendance_management_utils.dart';
 import 'package:qrscanner/core/models/user_model.dart';
@@ -61,17 +62,17 @@ class AttendanceManagementList extends StatelessWidget {
                   children: [
                     Text(
                       selectedDate.day.toString(),
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: AppTypography.kMedium18,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       DateFormat('MMM').format(selectedDate),
-                      style: const TextStyle(fontSize: 14, color: Colors.white70),
+                      style: AppTypography.kRegular12,
                     ),
                     const Spacer(),
                     Text(
                       '${dayAttendance.length} Users',
-                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                      style: AppTypography.kRegular12,
                     ),
                   ],
                 ),

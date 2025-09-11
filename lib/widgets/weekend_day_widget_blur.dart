@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 import 'package:qrscanner/core/utils/attendance_month_utils.dart';
 
 class WeekendDayWidgetBlurred extends StatelessWidget {
@@ -35,7 +35,7 @@ class WeekendDayWidgetBlurred extends StatelessWidget {
                 child: Text(
                   'Weekend ($wk)  •  ${DateFormat('MMM dd').format(day)}',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white,fontFamily: GoogleFonts.poppins().fontFamily,fontSize: 12),
+                  style: AppTypography.kRegular12,
                 ),
               ),
             ],

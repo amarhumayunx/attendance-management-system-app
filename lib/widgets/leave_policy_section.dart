@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qrscanner/core/screens/leave_policy_viewer_screen.dart';
+
+import '../core/constants/app_typography.dart';
 class LeavePolicySection extends StatelessWidget {
   const LeavePolicySection({super.key});
   @override
@@ -7,13 +9,9 @@ class LeavePolicySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Company Leave Policy',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: AppTypography.kMedium18,
         ),
         const SizedBox(height: 12),
         Text(
@@ -52,13 +50,9 @@ class LeavePolicySection extends StatelessWidget {
             ),
             onPressed: () => _openLeavePolicy(context),
             icon: const Icon(Icons.description, color: Colors.white),
-            label: const Text(
+            label: Text(
               'View Leave Policy',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
+              style: AppTypography.kMedium16,
             ),
           ),
         ),

@@ -5,8 +5,6 @@ import 'package:qrscanner/lib_exports.dart';
 import 'package:qrscanner/widgets/attendance_month_day_blur_item.dart';
 import 'package:qrscanner/widgets/weekend_day_widget_blur.dart';
 
-import '../../widgets/abstract_background_wrapper.dart';
-
 class AttendanceMonthScreen extends StatefulWidget {
   const AttendanceMonthScreen({super.key});
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:qrscanner/core/constants/app_typography.dart';
 
 class InfoRow extends StatelessWidget {
   final IconData icon;
@@ -26,22 +26,12 @@ class InfoRow extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 12,
-                  fontFamily: GoogleFonts.poppins().fontFamily,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: AppTypography.kRegular12,
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontFamily: GoogleFonts.poppins().fontFamily,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTypography.kMedium14,
               ),
             ],
           ),
